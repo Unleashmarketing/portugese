@@ -3,1283 +3,465 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fala! – Portugiesisch lernen</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,700&display=swap" rel="stylesheet">
+<title>Fala! – Portugiesisch A1–A2</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #faf8f4;
-  --bg2: #f0ede6;
-  --card: #ffffff;
-  --text: #1a1a1a;
-  --text2: #6b6560;
-  --green: #22c55e;
-  --green2: #16a34a;
-  --green-bg: #dcfce7;
-  --blue: #3b82f6;
-  --blue-bg: #dbeafe;
-  --amber: #f59e0b;
-  --amber-bg: #fef3c7;
-  --red: #ef4444;
-  --red-bg: #fee2e2;
-  --purple: #8b5cf6;
-  --purple-bg: #ede9fe;
-  --teal: #14b8a6;
-  --border: #e8e4de;
-  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
-  --shadow-lg: 0 4px 20px rgba(0,0,0,0.08);
-  --radius: 16px;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: 'Outfit', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-}
-@keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
-@keyframes pop { 0% { transform:scale(0.9); opacity:0; } 50% { transform:scale(1.03); } 100% { transform:scale(1); opacity:1; } }
-@keyframes shake { 0%,100% { transform:translateX(0); } 20%,60% { transform:translateX(-6px); } 40%,80% { transform:translateX(6px); } }
-@keyframes slideRight { from { transform:translateX(-100%); } to { transform:translateX(0); } }
-@keyframes confetti { 0% { transform:translateY(0) rotate(0); opacity:1; } 100% { transform:translateY(-60px) rotate(360deg); opacity:0; } }
-@keyframes pulse { 0%,100% { transform:scale(1); } 50% { transform:scale(1.05); } }
-.animate { animation: fadeUp 0.4s ease both; }
-
-/* ─── APP SHELL ─── */
-.app { max-width: 520px; margin: 0 auto; padding: 0 16px 100px; }
-
-/* ─── TOP BAR ─── */
-.topbar {
-  position: sticky; top: 0; z-index: 40;
-  background: rgba(250,248,244,0.92);
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-  padding: 12px 0; margin-bottom: 8px;
-  border-bottom: 1px solid var(--border);
-}
-.topbar-inner {
-  display: flex; align-items: center; justify-content: space-between;
-  max-width: 520px; margin: 0 auto; padding: 0 16px;
-}
-.topbar-logo {
-  font-family: 'Fraunces', serif;
-  font-size: 22px; font-weight: 700; color: var(--green2);
-  display: flex; align-items: center; gap: 6px;
-}
-.topbar-stats { display: flex; gap: 16px; align-items: center; }
-.stat {
-  display: flex; align-items: center; gap: 5px;
-  font-size: 14px; font-weight: 600;
-}
-.stat-icon { font-size: 18px; }
-.stat .xp { color: var(--amber); }
-.stat .streak { color: var(--red); }
-.stat .level { color: var(--blue); }
-
-/* ─── BOTTOM NAV ─── */
-.bottomnav {
-  position: fixed; bottom: 0; left: 0; right: 0;
-  z-index: 50;
-  background: rgba(255,255,255,0.95);
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-  border-top: 1px solid var(--border);
-  padding: 6px 0 calc(6px + env(safe-area-inset-bottom));
-}
-.bottomnav-inner {
-  max-width: 520px; margin: 0 auto;
-  display: flex; justify-content: space-around;
-}
-.bnav-btn {
-  background: none; border: none; cursor: pointer;
-  display: flex; flex-direction: column; align-items: center; gap: 2px;
-  padding: 6px 12px; border-radius: 12px;
-  transition: all 0.2s; color: #aaa; font-size: 11px; font-weight: 600;
-}
-.bnav-btn .ico { font-size: 22px; }
-.bnav-btn.active { color: var(--green2); }
-.bnav-btn:hover { background: var(--bg2); }
-
-/* ─── SCREENS ─── */
-.screen { display: none; }
-.screen.active { display: block; animation: fadeUp 0.35s ease; }
-
-/* ─── HOME / UNIT MAP ─── */
-.unit {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 20px;
-  margin-bottom: 14px; cursor: pointer;
-  transition: all 0.2s; box-shadow: var(--shadow);
-}
-.unit:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
-.unit.locked { opacity: 0.5; cursor: default; pointer-events: none; }
-.unit.locked:hover { box-shadow: var(--shadow); transform: none; }
-.unit-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-.unit-num {
-  font-size: 11px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.08em; padding: 3px 10px; border-radius: 8px;
-}
-.unit-lock { font-size: 20px; }
-.unit h3 {
-  font-family: 'Fraunces', serif;
-  font-size: 19px; font-weight: 700; margin-bottom: 4px;
-}
-.unit p { font-size: 13px; color: var(--text2); line-height: 1.5; }
-.unit-progress { margin-top: 12px; }
-.unit-bar {
-  height: 6px; border-radius: 3px; background: var(--bg2); overflow: hidden;
-}
-.unit-bar-fill {
-  height: 100%; border-radius: 3px; transition: width 0.6s ease;
-}
-.unit-label {
-  font-size: 11px; color: var(--text2); margin-top: 5px;
-  display: flex; justify-content: space-between;
-}
-
-/* ─── LESSON LIST ─── */
-.lesson-list { display: flex; flex-direction: column; gap: 8px; }
-.back-btn {
-  background: none; border: none; cursor: pointer;
-  font-size: 14px; font-weight: 600; color: var(--text2);
-  display: flex; align-items: center; gap: 6px;
-  margin-bottom: 16px; padding: 4px 0;
-}
-.back-btn:hover { color: var(--text); }
-.lesson-item {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 14px; padding: 16px 18px;
-  display: flex; align-items: center; gap: 14px;
-  cursor: pointer; transition: all 0.2s;
-  box-shadow: var(--shadow);
-}
-.lesson-item:hover { box-shadow: var(--shadow-lg); }
-.lesson-item.done { border-left: 4px solid var(--green); }
-.lesson-item.locked { opacity: 0.45; pointer-events: none; }
-.lesson-icon {
-  width: 42px; height: 42px; border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px; flex-shrink: 0;
-}
-.lesson-info { flex: 1; }
-.lesson-info h4 { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
-.lesson-info p { font-size: 12px; color: var(--text2); }
-.lesson-check { font-size: 20px; color: var(--green); }
-
-/* ─── EXERCISE VIEW ─── */
-.exercise-bar {
-  display: flex; align-items: center; gap: 12px; margin-bottom: 24px;
-}
-.exercise-close {
-  background: none; border: none; cursor: pointer;
-  font-size: 22px; color: var(--text2); padding: 4px;
-}
-.exercise-progress {
-  flex: 1; height: 10px; border-radius: 5px;
-  background: var(--bg2); overflow: hidden;
-}
-.exercise-progress-fill {
-  height: 100%; border-radius: 5px;
-  background: linear-gradient(90deg, var(--green), var(--teal));
-  transition: width 0.4s ease;
-}
-.exercise-hearts { display: flex; gap: 2px; font-size: 18px; }
-
-.exercise-card {
-  animation: pop 0.35s ease both;
-}
-.exercise-type {
-  font-size: 12px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.08em; margin-bottom: 8px;
-}
-.exercise-prompt {
-  font-family: 'Fraunces', serif;
-  font-size: clamp(20px, 5vw, 26px);
-  font-weight: 700; line-height: 1.35;
-  margin-bottom: 24px;
-}
-.exercise-hint {
-  font-size: 13px; color: var(--text2);
-  margin-top: -16px; margin-bottom: 20px;
-  font-style: italic;
-}
-
-/* Options */
-.options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
-.option-btn {
-  width: 100%; padding: 15px 18px;
-  background: var(--card); border: 2px solid var(--border);
-  border-radius: 14px; cursor: pointer;
-  font-family: 'Outfit', sans-serif;
-  font-size: 16px; font-weight: 500; color: var(--text);
-  text-align: left; transition: all 0.15s;
-  display: flex; align-items: center; gap: 12px;
-}
-.option-btn:hover:not(.disabled) { border-color: var(--blue); background: var(--blue-bg); }
-.option-btn.selected { border-color: var(--blue); background: var(--blue-bg); }
-.option-btn.correct { border-color: var(--green); background: var(--green-bg); color: var(--green2); }
-.option-btn.wrong { border-color: var(--red); background: var(--red-bg); color: var(--red); animation: shake 0.4s; }
-.option-btn.disabled { cursor: default; }
-.option-letter {
-  width: 28px; height: 28px; border-radius: 8px;
-  background: var(--bg2); display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: 700; color: var(--text2); flex-shrink: 0;
-}
-
-/* Text input */
-.text-input-wrap { margin-bottom: 20px; }
-.text-input {
-  width: 100%; padding: 16px 18px;
-  background: var(--card); border: 2px solid var(--border);
-  border-radius: 14px; font-family: 'Outfit', sans-serif;
-  font-size: 18px; color: var(--text); outline: none;
-  transition: border-color 0.2s;
-}
-.text-input:focus { border-color: var(--blue); }
-.text-input.correct { border-color: var(--green); background: var(--green-bg); }
-.text-input.wrong { border-color: var(--red); background: var(--red-bg); animation: shake 0.4s; }
-
-/* Match pairs */
-.match-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
-  margin-bottom: 20px;
-}
-.match-btn {
-  padding: 14px; border-radius: 12px;
-  border: 2px solid var(--border);
-  background: var(--card); cursor: pointer;
-  font-family: 'Outfit', sans-serif;
-  font-size: 15px; font-weight: 500;
-  text-align: center; transition: all 0.15s;
-}
-.match-btn:hover:not(.matched):not(.sel) { border-color: var(--blue); }
-.match-btn.sel { border-color: var(--blue); background: var(--blue-bg); }
-.match-btn.matched { border-color: var(--green); background: var(--green-bg); color: var(--green2); opacity: 0.6; pointer-events: none; }
-.match-btn.wrong-flash { border-color: var(--red); background: var(--red-bg); animation: shake 0.3s; }
-
-/* Word bank */
-.word-bank { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; min-height: 52px;
-  padding: 12px; border: 2px dashed var(--border); border-radius: 14px; background: var(--bg2); }
-.word-source { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-.word-chip {
-  padding: 10px 16px; border-radius: 10px;
-  border: 2px solid var(--border); background: var(--card);
-  cursor: pointer; font-family: 'Outfit', sans-serif;
-  font-size: 15px; font-weight: 500; transition: all 0.15s;
-}
-.word-chip:hover { border-color: var(--blue); }
-.word-chip.placed { opacity: 0.3; pointer-events: none; }
-.word-chip.in-bank { background: var(--blue-bg); border-color: var(--blue); }
-
-/* Check button */
-.check-btn {
-  width: 100%; padding: 16px;
-  border: none; border-radius: 14px; cursor: pointer;
-  font-family: 'Outfit', sans-serif;
-  font-size: 16px; font-weight: 700;
-  transition: all 0.2s;
-}
-.check-btn.primary {
-  background: var(--green); color: white;
-  box-shadow: 0 4px 0 var(--green2);
-}
-.check-btn.primary:hover { filter: brightness(1.05); }
-.check-btn.primary:active { box-shadow: 0 2px 0 var(--green2); transform: translateY(2px); }
-.check-btn:disabled { opacity: 0.4; cursor: default; }
-.check-btn.next {
-  background: var(--blue); color: white;
-  box-shadow: 0 4px 0 #2563eb;
-}
-
-/* Feedback bar */
-.feedback {
-  padding: 16px 18px; border-radius: 14px;
-  margin-bottom: 14px; display: flex; align-items: flex-start; gap: 10px;
-  animation: fadeUp 0.25s ease;
-}
-.feedback.correct { background: var(--green-bg); border: 1px solid rgba(34,197,94,0.2); }
-.feedback.wrong { background: var(--red-bg); border: 1px solid rgba(239,68,68,0.2); }
-.feedback .fb-icon { font-size: 22px; flex-shrink: 0; }
-.feedback .fb-text { font-size: 14px; line-height: 1.5; }
-.feedback .fb-text strong { display: block; margin-bottom: 2px; }
-.feedback.correct .fb-text { color: var(--green2); }
-.feedback.wrong .fb-text { color: #b91c1c; }
-
-/* ─── LESSON COMPLETE ─── */
-.complete-screen {
-  text-align: center; padding: 40px 0;
-  animation: pop 0.5s ease both;
-}
-.complete-emoji { font-size: 64px; margin-bottom: 16px; }
-.complete-screen h2 {
-  font-family: 'Fraunces', serif;
-  font-size: 28px; font-weight: 700; margin-bottom: 6px;
-}
-.complete-screen .sub { font-size: 15px; color: var(--text2); margin-bottom: 28px; }
-.complete-stats {
-  display: flex; justify-content: center; gap: 24px; margin-bottom: 32px;
-}
-.complete-stat {
-  text-align: center;
-}
-.complete-stat .val {
-  font-size: 28px; font-weight: 700;
-}
-.complete-stat .lbl { font-size: 12px; color: var(--text2); margin-top: 2px; }
-
-/* ─── VOCAB SCREEN ─── */
-.vocab-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
-}
-.vocab-card {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 14px; padding: 16px;
-  cursor: pointer; transition: all 0.2s;
-  box-shadow: var(--shadow); text-align: center;
-}
-.vocab-card:hover { box-shadow: var(--shadow-lg); }
-.vocab-card.flipped { background: var(--green-bg); border-color: rgba(34,197,94,0.3); }
-.vocab-word {
-  font-family: 'Fraunces', serif;
-  font-size: 20px; font-weight: 700; color: var(--green2);
-  margin-bottom: 4px;
-}
-.vocab-trans { font-size: 13px; color: var(--text2); }
-.vocab-cat-title {
-  font-size: 12px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.08em; color: var(--text2);
-  margin: 20px 0 10px; padding-left: 4px;
-}
-.vocab-cat-title:first-child { margin-top: 0; }
-
-/* ─── GRAMMAR SCREEN ─── */
-.grammar-card {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 22px;
-  margin-bottom: 12px; box-shadow: var(--shadow);
-}
-.grammar-card h3 {
-  font-family: 'Fraunces', serif;
-  font-size: 18px; font-weight: 700; margin-bottom: 10px;
-  display: flex; align-items: center; gap: 8px;
-}
-.grammar-card p { font-size: 14px; color: var(--text2); line-height: 1.65; margin-bottom: 10px; }
-.grammar-table {
-  width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 14px;
-}
-.grammar-table th {
-  text-align: left; padding: 8px 10px;
-  background: var(--bg2); font-weight: 600;
-  border-radius: 6px 6px 0 0;
-}
-.grammar-table td {
-  padding: 7px 10px; border-bottom: 1px solid var(--border);
-}
-.grammar-table tr:last-child td { border-bottom: none; }
-.grammar-example {
-  background: var(--bg2); border-radius: 10px;
-  padding: 12px 14px; margin-top: 8px;
-  font-size: 14px; line-height: 1.6;
-}
-.grammar-example .pt { color: var(--green2); font-weight: 600; }
-.grammar-example .de { color: var(--text2); font-style: italic; }
-
-/* ─── SECTION TITLE ─── */
-.sec-title {
-  font-family: 'Fraunces', serif;
-  font-size: 24px; font-weight: 700; margin-bottom: 4px;
-}
-.sec-sub { font-size: 14px; color: var(--text2); margin-bottom: 20px; }
-
-/* ─── SLANG SCREEN ─── */
-.slang-item {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 14px; padding: 16px 18px;
-  margin-bottom: 8px; cursor: pointer;
-  box-shadow: var(--shadow); transition: all 0.2s;
-}
-.slang-item:hover { box-shadow: var(--shadow-lg); }
-.slang-item.open { border-color: var(--purple); }
-.slang-phrase2 {
-  font-family: 'Fraunces', serif;
-  font-size: 18px; font-weight: 700; color: var(--purple);
-}
-.slang-mean { font-size: 13px; color: var(--text2); margin-top: 2px; }
-.slang-detail {
-  margin-top: 12px; padding-top: 12px;
-  border-top: 1px solid var(--border);
-  font-size: 13px; line-height: 1.7;
-  animation: fadeUp 0.25s ease;
-}
-.slang-detail .tone-label {
-  font-size: 11px; font-weight: 700; color: var(--purple);
-  text-transform: uppercase; letter-spacing: 0.06em;
-}
-.slang-detail .ex {
-  background: var(--purple-bg); border-radius: 10px;
-  padding: 10px 12px; margin-top: 8px;
-  font-style: italic;
-}
-
-/* Audio button */
-.audio-btn {
-  background: var(--blue-bg); border: 2px solid var(--blue);
-  border-radius: 12px; padding: 12px 20px;
-  cursor: pointer; font-size: 15px; font-weight: 600;
-  color: var(--blue); display: flex; align-items: center; gap: 8px;
-  margin-bottom: 16px; transition: all 0.15s;
-}
-.audio-btn:hover { background: var(--blue); color: white; }
-
-/* Fill blank */
-.fill-sentence {
-  font-size: 20px; font-weight: 500; line-height: 1.6;
-  margin-bottom: 20px;
-}
-.fill-blank {
-  display: inline-block; min-width: 100px;
-  border-bottom: 3px solid var(--blue);
-  padding: 2px 8px; margin: 0 4px;
-  font-weight: 700; color: var(--blue);
-}
-
-@media (max-width: 400px) {
-  .vocab-grid { grid-template-columns: 1fr; }
-  .match-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
-}
+:root{--bg:#faf8f4;--bg2:#f0ede6;--card:#fff;--text:#1a1a1a;--text2:#6b6560;--text3:#9a9490;--green:#22c55e;--green2:#16a34a;--green-bg:#dcfce7;--blue:#3b82f6;--blue2:#2563eb;--blue-bg:#dbeafe;--amber:#f59e0b;--amber-bg:#fef3c7;--red:#ef4444;--red-bg:#fee2e2;--purple:#8b5cf6;--purple-bg:#ede9fe;--teal:#0d9488;--teal-bg:#ccfbf1;--border:#e8e4de;--sh:0 1px 3px rgba(0,0,0,0.05),0 4px 12px rgba(0,0,0,0.03);--shl:0 4px 20px rgba(0,0,0,0.07);--r:16px}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%,75%{transform:translateX(-5px)}50%{transform:translateX(5px)}}
+@keyframes pop{0%{transform:scale(.92);opacity:0}60%{transform:scale(1.02)}100%{transform:scale(1);opacity:1}}
+.app{max-width:600px;margin:0 auto;padding:0 16px 100px}
+.topbar{position:sticky;top:0;z-index:40;background:rgba(250,248,244,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:10px 0}
+.topbar-inner{max-width:600px;margin:0 auto;padding:0 16px;display:flex;align-items:center;justify-content:space-between}
+.topbar-logo{font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--green2)}
+.topbar-level{font-size:13px;font-weight:600;color:var(--blue);background:var(--blue-bg);padding:4px 12px;border-radius:8px}
+.bottomnav{position:fixed;bottom:0;left:0;right:0;z-index:50;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-top:1px solid var(--border);padding:5px 0 calc(5px + env(safe-area-inset-bottom))}
+.bottomnav-inner{max-width:600px;margin:0 auto;display:flex;justify-content:space-around}
+.bnav{background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px 14px;border-radius:10px;color:#aaa;font-size:10px;font-weight:600;transition:.2s}.bnav .ico{font-size:20px}.bnav.active{color:var(--green2)}.bnav:hover{background:var(--bg2)}
+.screen{display:none}.screen.active{display:block;animation:fadeUp .3s ease}
+.sec-title{font-family:'Fraunces',serif;font-size:24px;font-weight:700;margin-bottom:4px}
+.sec-sub{font-size:14px;color:var(--text2);margin-bottom:20px}
+.back-btn{background:none;border:none;cursor:pointer;font-size:14px;font-weight:600;color:var(--text2);display:flex;align-items:center;gap:6px;margin-bottom:14px;padding:4px 0}.back-btn:hover{color:var(--text)}
+.unit{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;margin-bottom:12px;cursor:pointer;transition:.2s;box-shadow:var(--sh)}.unit:hover{box-shadow:var(--shl);transform:translateY(-1px)}.unit.locked{opacity:.45;cursor:default;pointer-events:none}
+.unit-tag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;padding:3px 10px;border-radius:8px;display:inline-block;margin-bottom:8px}
+.unit h3{font-family:'Fraunces',serif;font-size:18px;font-weight:700;margin-bottom:3px}.unit p{font-size:13px;color:var(--text2);line-height:1.5}
+.unit-bar{height:5px;border-radius:3px;background:var(--bg2);overflow:hidden;margin-top:12px}.unit-bar-fill{height:100%;border-radius:3px;transition:width .5s}
+.unit-meta{font-size:11px;color:var(--text3);margin-top:5px;display:flex;justify-content:space-between}
+.lesson-item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:.2s;box-shadow:var(--sh);margin-bottom:8px}.lesson-item:hover{box-shadow:var(--shl)}.lesson-item.done{border-left:4px solid var(--green)}.lesson-item.locked{opacity:.4;pointer-events:none}
+.lesson-icon{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.lesson-info{flex:1}.lesson-info h4{font-size:14px;font-weight:600;margin-bottom:1px}.lesson-info p{font-size:12px;color:var(--text2)}
+.ex-bar{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.ex-close{background:none;border:none;cursor:pointer;font-size:20px;color:var(--text2);padding:4px}
+.ex-progress{flex:1;height:8px;border-radius:4px;background:var(--bg2);overflow:hidden}.ex-progress-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--green),var(--teal));transition:width .4s}
+.ex-step{font-size:12px;font-weight:600;color:var(--text3);white-space:nowrap}
+.ex-card{animation:pop .3s ease both}
+.ex-type{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
+.ex-prompt{font-family:'Fraunces',serif;font-size:clamp(18px,4.5vw,24px);font-weight:700;line-height:1.35;margin-bottom:20px}
+.ex-hint{font-size:13px;color:var(--text2);margin-top:-12px;margin-bottom:16px;font-style:italic}
+.speak-btn{background:var(--blue-bg);border:2px solid transparent;border-radius:10px;padding:8px 14px;cursor:pointer;font-size:14px;font-weight:600;color:var(--blue);display:inline-flex;align-items:center;gap:6px;transition:.15s;margin-bottom:14px}.speak-btn:hover{border-color:var(--blue);background:var(--blue);color:#fff}
+.spk{background:none;border:none;cursor:pointer;font-size:15px;padding:2px 4px;vertical-align:middle;opacity:.55;transition:.15s}.spk:hover{opacity:1;transform:scale(1.15)}
+.options{display:flex;flex-direction:column;gap:7px;margin-bottom:16px}
+.opt{width:100%;padding:14px 16px;background:var(--card);border:2px solid var(--border);border-radius:13px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:15px;font-weight:500;color:var(--text);text-align:left;transition:.15s;display:flex;align-items:center;gap:11px}
+.opt:hover:not(.dis){border-color:var(--blue);background:var(--blue-bg)}.opt.sel{border-color:var(--blue);background:var(--blue-bg)}.opt.ok{border-color:var(--green);background:var(--green-bg);color:var(--green2)}.opt.no{border-color:var(--red);background:var(--red-bg);color:var(--red);animation:shake .35s}.opt.dis{cursor:default}
+.opt-l{width:26px;height:26px;border-radius:7px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text3);flex-shrink:0}
+.tinput{width:100%;padding:14px 16px;background:var(--card);border:2px solid var(--border);border-radius:13px;font-family:'Outfit',sans-serif;font-size:17px;color:var(--text);outline:none;transition:.2s;margin-bottom:14px}.tinput:focus{border-color:var(--blue)}.tinput.ok{border-color:var(--green);background:var(--green-bg)}.tinput.no{border-color:var(--red);background:var(--red-bg);animation:shake .35s}
+.fill-s{font-size:19px;font-weight:500;line-height:1.7;margin-bottom:18px}.fill-b{display:inline-block;min-width:80px;border-bottom:3px solid var(--blue);padding:2px 6px;margin:0 3px;font-weight:700;color:var(--blue)}
+.match-g{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:16px}
+.match-b{padding:12px;border-radius:11px;border:2px solid var(--border);background:var(--card);cursor:pointer;font-size:14px;font-weight:500;text-align:center;transition:.15s}.match-b:hover:not(.md):not(.sl){border-color:var(--blue)}.match-b.sl{border-color:var(--blue);background:var(--blue-bg)}.match-b.md{border-color:var(--green);background:var(--green-bg);color:var(--green2);opacity:.55;pointer-events:none}.match-b.wf{border-color:var(--red);background:var(--red-bg);animation:shake .3s}
+.fb{padding:14px 16px;border-radius:13px;margin-bottom:12px;display:flex;align-items:flex-start;gap:9px;animation:fadeUp .2s ease}.fb.fok{background:var(--green-bg);border:1px solid rgba(34,197,94,.18)}.fb.fno{background:var(--red-bg);border:1px solid rgba(239,68,68,.18)}.fb-i{font-size:20px;flex-shrink:0}.fb-t{font-size:13px;line-height:1.55}.fb.fok .fb-t{color:var(--green2)}.fb.fno .fb-t{color:#b91c1c}
+.btn{width:100%;padding:14px;border:none;border-radius:13px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;transition:.2s}.btn-g{background:var(--green);color:#fff;box-shadow:0 4px 0 var(--green2)}.btn-g:hover{filter:brightness(1.05)}.btn-g:active{box-shadow:0 2px 0 var(--green2);transform:translateY(2px)}.btn-b{background:var(--blue);color:#fff;box-shadow:0 4px 0 var(--blue2)}.btn:disabled{opacity:.35;cursor:default}
+.info-card{background:var(--bg2);border-radius:14px;padding:18px 20px;font-size:14.5px;line-height:1.85;white-space:pre-line;margin-bottom:18px;border-left:4px solid var(--blue)}.info-card h4{font-family:'Fraunces',serif;font-size:17px;font-weight:700;margin-bottom:8px}
+.gram-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:12px;box-shadow:var(--sh)}.gram-card h3{font-family:'Fraunces',serif;font-size:17px;font-weight:700;margin-bottom:8px}.gram-card p{font-size:14px;color:var(--text2);line-height:1.65;margin-bottom:8px;white-space:pre-line}
+.gram-table{width:100%;border-collapse:collapse;font-size:13.5px;margin:8px 0}.gram-table th{text-align:left;padding:7px 10px;background:var(--bg2);font-weight:600}.gram-table td{padding:6px 10px;border-bottom:1px solid var(--border)}.gram-table tr:last-child td{border-bottom:none}
+.gram-ex{background:var(--bg2);border-radius:10px;padding:10px 14px;margin-top:6px;font-size:13.5px;line-height:1.6}.gram-ex .pt{color:var(--green2);font-weight:600}.gram-ex .de{color:var(--text2);font-style:italic}
+.voc-cat{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin:18px 0 8px;padding-left:2px}
+.voc-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.voc-card{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:14px;cursor:pointer;transition:.2s;box-shadow:var(--sh);text-align:center;position:relative}.voc-card:hover{box-shadow:var(--shl)}.voc-card.fl{background:var(--green-bg);border-color:rgba(34,197,94,.25)}
+.voc-w{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--green2);margin-bottom:2px}.voc-d{font-size:12px;color:var(--text2)}
+.voc-spk{position:absolute;top:6px;right:6px;background:none;border:none;cursor:pointer;font-size:14px;opacity:.5;padding:4px}.voc-spk:hover{opacity:1}
+.slang-i{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:14px 16px;margin-bottom:7px;cursor:pointer;box-shadow:var(--sh);transition:.2s}.slang-i:hover{box-shadow:var(--shl)}.slang-i.open{border-color:var(--purple)}
+.slang-p{font-family:'Fraunces',serif;font-size:17px;font-weight:700;color:var(--purple)}.slang-m{font-size:13px;color:var(--text2);margin-top:1px}
+.slang-d{margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:13px;line-height:1.7;animation:fadeUp .25s ease}.slang-d .tl{font-size:10px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.06em}.slang-d .ex{background:var(--purple-bg);border-radius:9px;padding:9px 12px;margin-top:7px;font-style:italic}
+.complete{text-align:center;padding:36px 0;animation:pop .45s ease both}.complete .em{font-size:56px;margin-bottom:14px}.complete h2{font-family:'Fraunces',serif;font-size:26px;font-weight:700;margin-bottom:20px}
+@media(max-width:400px){.voc-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-
-<div class="topbar">
-  <div class="topbar-inner">
-    <div class="topbar-logo">🇧🇷 Fala!</div>
-    <div class="topbar-stats">
-      <div class="stat"><span class="stat-icon">⚡</span><span class="xp" id="xp-display">0</span></div>
-      <div class="stat"><span class="stat-icon">🔥</span><span class="streak" id="streak-display">1</span></div>
-      <div class="stat"><span class="stat-icon">📊</span><span class="level" id="level-display">A1</span></div>
-    </div>
-  </div>
-</div>
-
+<div class="topbar"><div class="topbar-inner"><div class="topbar-logo">🇧🇷 Fala!</div><div class="topbar-level" id="lvl">A1</div></div></div>
 <div class="app">
-  <!-- HOME -->
-  <div class="screen active" id="screen-home"></div>
-  <!-- UNIT -->
-  <div class="screen" id="screen-unit"></div>
-  <!-- EXERCISE -->
-  <div class="screen" id="screen-exercise"></div>
-  <!-- VOCAB -->
-  <div class="screen" id="screen-vocab"></div>
-  <!-- GRAMMAR -->
-  <div class="screen" id="screen-grammar"></div>
-  <!-- SLANG -->
-  <div class="screen" id="screen-slang"></div>
+<div class="screen active" id="scr-home"></div>
+<div class="screen" id="scr-unit"></div>
+<div class="screen" id="scr-ex"></div>
+<div class="screen" id="scr-vocab"></div>
+<div class="screen" id="scr-gram"></div>
+<div class="screen" id="scr-slang"></div>
 </div>
-
-<nav class="bottomnav">
-  <div class="bottomnav-inner">
-    <button class="bnav-btn active" data-screen="home" onclick="goScreen('home')"><span class="ico">📚</span>Lernen</button>
-    <button class="bnav-btn" data-screen="vocab" onclick="goScreen('vocab')"><span class="ico">🔤</span>Vokabeln</button>
-    <button class="bnav-btn" data-screen="grammar" onclick="goScreen('grammar')"><span class="ico">📐</span>Grammatik</button>
-    <button class="bnav-btn" data-screen="slang" onclick="goScreen('slang')"><span class="ico">🗣️</span>Gírias</button>
-  </div>
-</nav>
-
+<nav class="bottomnav"><div class="bottomnav-inner">
+<button class="bnav active" data-s="home" onclick="go('home')"><span class="ico">📚</span>Lernen</button>
+<button class="bnav" data-s="vocab" onclick="go('vocab')"><span class="ico">🔤</span>Vokabeln</button>
+<button class="bnav" data-s="gram" onclick="go('gram')"><span class="ico">📐</span>Grammatik</button>
+<button class="bnav" data-s="slang" onclick="go('slang')"><span class="ico">🗣️</span>Gírias</button>
+</div></nav>
+<script src="app-data.js"></script>
 <script>
-// ═══════════════════════════════════════════
-// CURRICULUM DATA – A1/A2 structured
-// ═══════════════════════════════════════════
-
-const CURRICULUM = [
-  {
-    id: 'u1', title: 'Olá! Begrüßungen', desc: 'Sich vorstellen, grüßen und verabschieden',
-    color: '#22c55e', bgColor: '#dcfce7',
-    lessons: [
-      {
-        id: 'u1l1', title: 'Hallo & Tschüss', type: 'mixed', xp: 15,
-        exercises: [
-          { type:'info', title:'Begrüßungen', content:'Auf Portugiesisch gibt es drei Tagesgrüße:\n\n🌅 Bom dia = Guten Morgen\n☀️ Boa tarde = Guten Nachmittag\n🌙 Boa noite = Guten Abend / Gute Nacht\n\n👋 Olá = Hallo (neutral, immer passend)\n👋 Oi = Hi (informell)' },
-          { type:'pick', prompt:'Wie sagt man "Guten Morgen"?', options:['Boa noite','Bom dia','Boa tarde','Olá'], correct:1 },
-          { type:'pick', prompt:'Was bedeutet "Boa noite"?', options:['Guten Morgen','Guten Nachmittag','Guten Abend','Hallo'], correct:2 },
-          { type:'write', prompt:'Schreib "Hallo" auf Portugiesisch', answer:'olá', hint:'Beginnt mit O...' },
-          { type:'pick', prompt:'"Oi" ist...', options:['Formell','Informell (wie "Hi")','Eine Verabschiedung','Ein Name'], correct:1 },
-          { type:'write', prompt:'Übersetze: "Guten Nachmittag"', answer:'boa tarde', hint:'Boa = gut (weiblich), Tarde = Nachmittag' },
-          { type:'info', title:'Verabschiedungen', content:'👋 Tchau = Tschüss\n👋 Até logo = Bis bald\n👋 Até amanhã = Bis morgen\n\nInformell:\n✌️ Falou! = Tschüss! / Abgemacht!\n✌️ Valeu! = Danke / Tschüss!' },
-          { type:'pick', prompt:'Was bedeutet "Até amanhã"?', options:['Bis bald','Bis morgen','Guten Tag','Danke'], correct:1 },
-          { type:'write', prompt:'Schreib "Tschüss" auf Portugiesisch', answer:'tchau', hint:'Klingt wie das italienische "ciao"' },
-          { type:'match', prompt:'Verbinde die Paare', pairs:[['Bom dia','Guten Morgen'],['Boa noite','Guten Abend'],['Tchau','Tschüss'],['Olá','Hallo']] },
-        ]
-      },
-      {
-        id: 'u1l2', title: 'Wie geht es dir?', type: 'mixed', xp: 15,
-        exercises: [
-          { type:'info', title:'Nach dem Befinden fragen', content:'🤝 Tudo bem? = Alles gut?\n🤝 Como vai? = Wie geht\'s?\n🤝 Como você está? = Wie geht es dir/Ihnen?\n\nAntworten:\n✅ Tudo bem! = Alles gut!\n✅ Tudo bom! = Alles bestens!\n✅ Estou bem = Mir geht\'s gut\n❌ Mais ou menos = So lala' },
-          { type:'pick', prompt:'"Tudo bem?" bedeutet...', options:['Woher kommst du?','Alles gut?','Wie heißt du?','Danke'], correct:1 },
-          { type:'write', prompt:'Antworte positiv auf "Tudo bem?"', answer:'tudo bem', hint:'Gleiche Worte, aber als Aussage!' },
-          { type:'pick', prompt:'Was bedeutet "Mais ou menos"?', options:['Sehr gut','Alles bestens','So lala','Schlecht'], correct:2 },
-          { type:'pick', prompt:'Welche Antwort passt zu "Como vai?"', options:['Tchau','Tudo bom!','Bom dia','Até logo'], correct:1 },
-          { type:'fill', sentence:'Como você ___?', blank:'está', hint:'Das Verb "sein" für "du/Sie"' },
-          { type:'match', prompt:'Verbinde richtig', pairs:[['Tudo bem?','Alles gut?'],['Estou bem','Mir geht\'s gut'],['Mais ou menos','So lala'],['Como vai?','Wie geht\'s?']] },
-          { type:'write', prompt:'Übersetze: "Mir geht es gut"', answer:'estou bem', hint:'Estou = Ich bin (temporär)' },
-        ]
-      },
-      {
-        id: 'u1l3', title: 'Sich vorstellen', type: 'mixed', xp: 20,
-        exercises: [
-          { type:'info', title:'Name & Herkunft', content:'👤 Meu nome é... = Mein Name ist...\n👤 Eu sou... = Ich bin...\n👤 Me chamo... = Ich heiße...\n\n🌍 Eu sou da Alemanha = Ich bin aus Deutschland\n🌍 Eu sou de Berlim = Ich bin aus Berlin\n\n📝 Wichtig:\n• "da" = de + a (für weibliche Länder)\n• "do" = de + o (für männliche Länder)\n• Die meisten Länder sind weiblich!' },
-          { type:'pick', prompt:'"Eu sou da Alemanha" bedeutet...', options:['Ich liebe Deutschland','Ich bin aus Deutschland','Ich fahre nach Deutschland','Ich kenne Deutschland'], correct:1 },
-          { type:'write', prompt:'Schreib: "Mein Name ist" auf Portugiesisch', answer:'meu nome é', hint:'Meu = Mein, Nome = Name, É = ist' },
-          { type:'fill', sentence:'Eu ___ de Berlim.', blank:'sou', hint:'Das Verb "sein" für "ich"' },
-          { type:'pick', prompt:'Wie fragst du "Wie heißt du?"', options:['Qual é seu nome?','Tudo bem?','De onde você é?','Quanto custa?'], correct:0 },
-          { type:'write', prompt:'Übersetze: "Ich bin aus Deutschland"', answer:'eu sou da alemanha', hint:'Eu sou + da + Alemanha' },
-          { type:'info', title:'Freut mich!', content:'🤝 Muito prazer! = Freut mich sehr!\n🤝 Prazer em te conhecer! = Freut mich dich kennenzulernen!\n\nInformell: "E aí? Beleza?" = Hey, alles klar?' },
-          { type:'pick', prompt:'"Muito prazer" sagt man...', options:['Beim Essen','Beim Kennenlernen','Beim Abschied','Beim Telefonieren'], correct:1 },
-          { type:'match', prompt:'Verbinde die Paare', pairs:[['Meu nome é','Mein Name ist'],['Eu sou de','Ich bin aus'],['Muito prazer','Freut mich'],['Qual é seu nome?','Wie heißt du?']] },
-          { type:'write', prompt:'Übersetze: "Freut mich!"', answer:'muito prazer', hint:'Muito = Sehr, Prazer = Freude/Vergnügen' },
-        ]
-      },
-    ]
-  },
-  {
-    id: 'u2', title: 'Números & Cores', desc: 'Zahlen von 0-20, Farben und einfaches Zählen',
-    color: '#3b82f6', bgColor: '#dbeafe',
-    lessons: [
-      {
-        id: 'u2l1', title: 'Zahlen 0-10', type: 'mixed', xp: 15,
-        exercises: [
-          { type:'info', title:'Zahlen 0 bis 10', content:'0 = zero\n1 = um / uma\n2 = dois / duas\n3 = três\n4 = quatro\n5 = cinco\n6 = seis\n7 = sete\n8 = oito\n9 = nove\n10 = dez\n\n📝 Achtung: 1 und 2 haben männliche UND weibliche Formen!\n• um café (ein Kaffee) / uma água (ein Wasser)\n• dois cafés / duas águas' },
-          { type:'pick', prompt:'Was ist "cinco"?', options:['3','4','5','6'], correct:2 },
-          { type:'write', prompt:'Schreib die Zahl 7 auf Portugiesisch', answer:'sete', hint:'S-E-T-E' },
-          { type:'pick', prompt:'"Oito" ist welche Zahl?', options:['6','7','8','9'], correct:2 },
-          { type:'match', prompt:'Verbinde Zahlen', pairs:[['três','3'],['seis','6'],['nove','9'],['dez','10']] },
-          { type:'write', prompt:'Schreib die Zahl 4 auf Portugiesisch', answer:'quatro', hint:'Wie "Quartett" – vier!' },
-          { type:'fill', sentence:'___ cafés, por favor.', blank:'dois', hint:'Zwei Kaffee bitte (männlich!)' },
-        ]
-      },
-      {
-        id: 'u2l2', title: 'Zahlen 11-20 & Farben', type: 'mixed', xp: 20,
-        exercises: [
-          { type:'info', title:'Zahlen 11-20', content:'11 = onze\n12 = doze\n13 = treze\n14 = catorze / quatorze\n15 = quinze\n16 = dezesseis\n17 = dezessete\n18 = dezoito\n19 = dezenove\n20 = vinte' },
-          { type:'pick', prompt:'Was ist "quinze"?', options:['14','15','16','17'], correct:1 },
-          { type:'write', prompt:'Schreib 20 auf Portugiesisch', answer:'vinte', hint:'V-I-N-T-E' },
-          { type:'info', title:'Farben (Cores)', content:'🔴 Vermelho = Rot\n🔵 Azul = Blau\n🟢 Verde = Grün\n🟡 Amarelo = Gelb\n⚫ Preto = Schwarz\n⚪ Branco = Weiß\n🟠 Laranja = Orange\n🩷 Rosa = Rosa/Pink' },
-          { type:'pick', prompt:'"Verde" bedeutet...', options:['Rot','Gelb','Grün','Blau'], correct:2 },
-          { type:'match', prompt:'Verbinde die Farben', pairs:[['Vermelho','Rot'],['Azul','Blau'],['Amarelo','Gelb'],['Preto','Schwarz']] },
-          { type:'write', prompt:'Schreib "Weiß" auf Portugiesisch', answer:'branco', hint:'B-R-A-N-C-O' },
-          { type:'fill', sentence:'O céu é ___.', blank:'azul', hint:'Der Himmel ist ... (blau)' },
-        ]
-      },
-    ]
-  },
-  {
-    id: 'u3', title: 'No Café', desc: 'Im Café bestellen, Essen & Trinken, Höflichkeitsformen',
-    color: '#f59e0b', bgColor: '#fef3c7',
-    lessons: [
-      {
-        id: 'u3l1', title: 'Bestellen im Café', type: 'mixed', xp: 20,
-        exercises: [
-          { type:'info', title:'Im Café bestellen', content:'☕ Um café, por favor = Einen Kaffee, bitte\n🥐 Um pão de queijo = Ein Käsebrötchen\n🥤 Um suco de laranja = Einen Orangensaft\n💧 Uma água = Ein Wasser\n🍺 Uma cerveja = Ein Bier\n\n💰 Quanto custa? = Wie viel kostet das?\n💰 A conta, por favor = Die Rechnung, bitte\n\n📝 "Um" (männlich) vs "Uma" (weiblich):\n• Um café, um suco, um pão\n• Uma água, uma cerveja, uma conta' },
-          { type:'pick', prompt:'Wie bestellst du einen Kaffee?', options:['Uma café','Um café, por favor','Café aqui','Quero café agora'], correct:1 },
-          { type:'write', prompt:'Übersetze: "Die Rechnung, bitte"', answer:'a conta por favor', hint:'A conta = die Rechnung' },
-          { type:'fill', sentence:'___ água, por favor.', blank:'uma', hint:'Água ist weiblich!' },
-          { type:'pick', prompt:'"Quanto custa?" bedeutet...', options:['Was ist das?','Wo ist das?','Wie viel kostet das?','Haben Sie das?'], correct:2 },
-          { type:'match', prompt:'Verbinde', pairs:[['café','Kaffee'],['água','Wasser'],['cerveja','Bier'],['suco','Saft']] },
-          { type:'write', prompt:'Bestelle ein Bier auf Portugiesisch', answer:'uma cerveja por favor', hint:'Cerveja ist weiblich → Uma' },
-          { type:'fill', sentence:'Quanto ___?', blank:'custa', hint:'Wie viel ... es? (kosten)' },
-        ]
-      },
-      {
-        id: 'u3l2', title: 'Essen & Geschmack', type: 'mixed', xp: 20,
-        exercises: [
-          { type:'info', title:'Essen beschreiben', content:'😋 Delicioso! = Lecker!\n😋 Gostoso! = Lecker! (informeller)\n🌶️ Picante = Scharf\n🧂 Salgado = Salzig\n🍬 Doce = Süß\n😕 Ruim = Schlecht\n\nNützliche Sätze:\n• Eu quero... = Ich möchte...\n• Eu não quero... = Ich möchte nicht...\n• Tem...? = Haben Sie...? / Gibt es...?' },
-          { type:'pick', prompt:'"Gostoso" bedeutet...', options:['Salzig','Süß','Lecker','Scharf'], correct:2 },
-          { type:'write', prompt:'Wie sagst du "Ich möchte..."?', answer:'eu quero', hint:'Eu = Ich, Quero = möchte/will' },
-          { type:'fill', sentence:'Eu ___ um café.', blank:'quero', hint:'Ich ... einen Kaffee (wollen)' },
-          { type:'pick', prompt:'"Tem cerveja?" bedeutet...', options:['Ist das Bier?','Haben Sie Bier?','Wo ist Bier?','Kein Bier!'], correct:1 },
-          { type:'match', prompt:'Verbinde', pairs:[['doce','süß'],['salgado','salzig'],['picante','scharf'],['delicioso','lecker']] },
-          { type:'write', prompt:'Übersetze: "Ich möchte nicht"', answer:'eu não quero', hint:'Não = nicht (vor dem Verb!)' },
-        ]
-      },
-    ]
-  },
-  {
-    id: 'u4', title: 'Eu, Você, Nós', desc: 'Personalpronomen, Verb "sein" (ser/estar), einfache Sätze',
-    color: '#8b5cf6', bgColor: '#ede9fe',
-    lessons: [
-      {
-        id: 'u4l1', title: 'Pronomen & Ser', type: 'mixed', xp: 25,
-        exercises: [
-          { type:'info', title:'Personalpronomen', content:'👤 Eu = Ich\n👤 Você = Du / Sie\n👤 Ele = Er\n👤 Ela = Sie (weiblich)\n👥 Nós = Wir\n👥 Vocês = Ihr / Sie (Plural)\n👥 Eles = Sie (männl. Plural)\n👥 Elas = Sie (weibl. Plural)\n\n📝 In Brasilien benutzt man fast immer "você" statt "tu"!' },
-          { type:'pick', prompt:'"Nós" bedeutet...', options:['Ich','Du','Wir','Sie'], correct:2 },
-          { type:'info', title:'Das Verb SER (sein – permanent)', content:'SER = sein (dauerhaft, Identität)\n\nEu sou = Ich bin\nVocê é = Du bist\nEle/Ela é = Er/Sie ist\nNós somos = Wir sind\nVocês são = Ihr seid\nEles/Elas são = Sie sind\n\nBeispiele:\n• Eu sou alemão = Ich bin Deutscher\n• Ela é brasileira = Sie ist Brasilianerin\n• Nós somos amigos = Wir sind Freunde' },
-          { type:'fill', sentence:'Eu ___ brasileiro.', blank:'sou', hint:'"Ich bin" mit ser' },
-          { type:'pick', prompt:'"Ela é professora" bedeutet...', options:['Er ist Lehrer','Sie ist Lehrerin','Wir sind Lehrer','Sie sind Lehrer'], correct:1 },
-          { type:'write', prompt:'Übersetze: "Wir sind Freunde"', answer:'nós somos amigos', hint:'Nós + somos + amigos' },
-          { type:'fill', sentence:'Vocês ___ de onde?', blank:'são', hint:'"Ihr seid" / "Sie sind" mit ser' },
-          { type:'match', prompt:'Konjugiere SER', pairs:[['Eu','sou'],['Você','é'],['Nós','somos'],['Eles','são']] },
-          { type:'write', prompt:'Übersetze: "Er ist Brasilianer"', answer:'ele é brasileiro', hint:'Ele + é + brasileiro' },
-        ]
-      },
-      {
-        id: 'u4l2', title: 'Ser vs. Estar', type: 'mixed', xp: 25,
-        exercises: [
-          { type:'info', title:'SER vs ESTAR – der große Unterschied!', content:'🔵 SER = sein (DAUERHAFT)\n→ Identität, Herkunft, Beruf, Charakter\n• Eu sou alemão (Ich bin Deutscher)\n• Ela é bonita (Sie ist schön – immer)\n\n🟢 ESTAR = sein (TEMPORÄR)\n→ Gefühle, Zustände, Orte\n• Eu estou feliz (Ich bin gerade glücklich)\n• Ele está em casa (Er ist zu Hause)\n\nESTAR konjugiert:\nEu estou / Você está / Nós estamos\n\n📝 Eselsbrücke: Wenn es sich ändern kann → ESTAR!' },
-          { type:'pick', prompt:'"Eu estou cansado" – warum ESTAR?', options:['Weil ich immer müde bin','Weil müde sein temporär ist','Weil es eine Frage ist','Weil ich ein Mann bin'], correct:1 },
-          { type:'pick', prompt:'Welcher Satz ist richtig?', options:['Eu sou feliz (gerade)','Eu estou brasileiro','Eu estou em casa','Eu sou cansado (gerade)'], correct:2 },
-          { type:'fill', sentence:'Ela ___ bonita. (immer)', blank:'é', hint:'Dauerhaft schön = SER' },
-          { type:'fill', sentence:'Eu ___ cansado. (gerade)', blank:'estou', hint:'Gerade müde = ESTAR' },
-          { type:'pick', prompt:'"Nós estamos no Brasil" – richtig oder falsch?', options:['Richtig – wir sind gerade dort','Falsch – müsste "somos" sein'], correct:0 },
-          { type:'match', prompt:'SER oder ESTAR?', pairs:[['Eu ___ alemão','sou (SER)'],['Eu ___ feliz (gerade)','estou (ESTAR)'],['Ela ___ professora','é (SER)'],['Ele ___ em casa','está (ESTAR)']] },
-          { type:'write', prompt:'Übersetze: "Ich bin müde" (gerade)', answer:'eu estou cansado', hint:'Temporär → ESTAR: estou' },
-        ]
-      },
-    ]
-  },
-  {
-    id: 'u5', title: 'Dia a Dia', desc: 'Alltag, Uhrzeit, Wochentage, tägliche Routinen',
-    color: '#14b8a6', bgColor: '#ccfbf1',
-    lessons: [
-      {
-        id: 'u5l1', title: 'Wochentage & Uhrzeit', type: 'mixed', xp: 20,
-        exercises: [
-          { type:'info', title:'Wochentage', content:'📅 Segunda-feira = Montag\n📅 Terça-feira = Dienstag\n📅 Quarta-feira = Mittwoch\n📅 Quinta-feira = Donnerstag\n📅 Sexta-feira = Freitag\n📅 Sábado = Samstag\n📅 Domingo = Sonntag\n\n📝 Im Alltag lässt man "-feira" oft weg:\n"Na segunda" = Am Montag' },
-          { type:'pick', prompt:'Welcher Tag ist "Quarta-feira"?', options:['Montag','Dienstag','Mittwoch','Donnerstag'], correct:2 },
-          { type:'match', prompt:'Verbinde die Tage', pairs:[['Segunda','Montag'],['Sexta','Freitag'],['Sábado','Samstag'],['Domingo','Sonntag']] },
-          { type:'info', title:'Uhrzeit', content:'🕐 Que horas são? = Wie spät ist es?\n\n• É uma hora = Es ist 1 Uhr\n• São duas horas = Es ist 2 Uhr\n• São três e meia = Es ist halb 4 (3:30)\n• São cinco e quinze = Es ist Viertel nach 5\n\n📝 1 Uhr: "É" (Singular)\nAb 2 Uhr: "São" (Plural)' },
-          { type:'pick', prompt:'"São três e meia" bedeutet...', options:['3:15','3:30','3:45','3:00'], correct:1 },
-          { type:'fill', sentence:'Que horas ___?', blank:'são', hint:'Wie spät ... es?' },
-          { type:'write', prompt:'Schreib: "Wie spät ist es?"', answer:'que horas são', hint:'Que = Was/Welche, Horas = Stunden' },
-        ]
-      },
-    ]
-  },
+function speak(t){if(!('speechSynthesis' in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='pt-BR';u.rate=0.85;const v=speechSynthesis.getVoices().find(v=>v.lang.startsWith('pt'));if(v)u.voice=v;speechSynthesis.speak(u);}
+if('speechSynthesis' in window)speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();
+function spk(w,e){if(e){e.stopPropagation();e.preventDefault();}speak(w);}
+const C=[
+{id:'a1u1',lvl:'A1',title:'Olá! Begrüßungen',desc:'Grüßen, vorstellen, verabschieden',color:'#22c55e',bg:'#dcfce7',lessons:[
+{id:'a1u1l1',title:'Hallo & Tschüss',xp:15,exercises:[
+{type:'info',title:'Die drei Tagesgrüße',content:'Portugiesisch hat drei Begrüßungen:\n\n🌅 <b>Bom dia</b> = Guten Morgen\n☀️ <b>Boa tarde</b> = Guten Nachmittag\n🌙 <b>Boa noite</b> = Guten Abend\n\n📝 „Bom" (männl.) weil „dia" männl. ist\n„Boa" (weibl.) weil „tarde/noite" weibl. sind\n\n👋 <b>Olá</b> = Hallo · <b>Oi</b> = Hi\n👋 <b>Tchau</b> = Tschüss\n👋 <b>Até logo</b> = Bis bald\n👋 <b>Até amanhã</b> = Bis morgen'},
+{type:'pick',prompt:'Wie sagt man „Guten Morgen"?',options:['Boa noite','Bom dia','Boa tarde','Olá'],correct:1,audio:'Bom dia'},
+{type:'pick',prompt:'Warum „Bom dia" und nicht „Boa dia"?',options:['Zufall','Weil „dia" männlich ist','Weil es morgens ist'],correct:1},
+{type:'write',prompt:'Schreib „Hallo" auf Portugiesisch',answer:'olá',hint:'Hat einen Akzent auf dem a'},
+{type:'write',prompt:'Übersetze: „Guten Nachmittag"',answer:'boa tarde',hint:'Boa (weibl.) + Tarde'},
+{type:'pick',prompt:'Was bedeutet „Até amanhã"?',options:['Bis bald','Bis morgen','Guten Tag'],correct:1,audio:'Até amanhã'},
+{type:'write',prompt:'Schreib „Tschüss"',answer:'tchau',hint:'Wie „ciao"'},
+{type:'match',prompt:'Verbinde',pairs:[['Bom dia','Guten Morgen'],['Boa noite','Guten Abend'],['Tchau','Tschüss'],['Até logo','Bis bald']]},
+]},
+{id:'a1u1l2',title:'Wie geht es dir?',xp:15,exercises:[
+{type:'info',title:'Befinden',content:'🤝 <b>Tudo bem?</b> = Alles gut?\n🤝 <b>Como vai?</b> = Wie gehts?\n\nAntworten:\n✅ <b>Tudo bem!</b> = Alles gut!\n✅ <b>Estou bem</b> = Mir gehts gut\n➖ <b>Mais ou menos</b> = So lala\n\n📝 „Tudo bem?" ist Frage UND Antwort!'},
+{type:'pick',prompt:'„Tudo bem?" bedeutet...',options:['Wie heißt du?','Alles gut?','Danke!'],correct:1,audio:'Tudo bem?'},
+{type:'write',prompt:'Antworte positiv auf „Tudo bem?"',answer:'tudo bem',hint:'Gleiche Worte!'},
+{type:'pick',prompt:'„Mais ou menos" = ?',options:['Sehr gut','So lala','Schlecht'],correct:1,audio:'Mais ou menos'},
+{type:'fill',sentence:'Como você ___?',blank:'está',hint:'Verb „estar"'},
+{type:'write',prompt:'Übersetze: „Mir geht es gut"',answer:'estou bem',hint:'Estou + bem'},
+{type:'match',prompt:'Verbinde',pairs:[['Tudo bem?','Alles gut?'],['Estou bem','Mir gehts gut'],['Mais ou menos','So lala'],['Como vai?','Wie gehts?']]},
+]},
+{id:'a1u1l3',title:'Sich vorstellen',xp:20,exercises:[
+{type:'info',title:'Name & Herkunft',content:'👤 <b>Meu nome é...</b> = Mein Name ist...\n👤 <b>Me chamo...</b> = Ich heiße...\n\n🌍 <b>Eu sou da Alemanha</b> = Ich bin aus Deutschland\n\n📝 Präpositionen:\n• <b>da</b> = de+a (weibl.: a Alemanha)\n• <b>do</b> = de+o (männl.: o Brasil)\n\n🤝 <b>Muito prazer!</b> = Freut mich!'},
+{type:'pick',prompt:'„Eu sou da Alemanha" = ?',options:['Ich liebe Deutschland','Ich bin aus Deutschland','Ich fahre nach Deutschland'],correct:1,audio:'Eu sou da Alemanha'},
+{type:'write',prompt:'Schreib: „Mein Name ist"',answer:'meu nome é',hint:'Meu Nome É'},
+{type:'fill',sentence:'Eu ___ de Berlim.',blank:'sou',hint:'Verb „ser" für ich'},
+{type:'write',prompt:'Übersetze: „Freut mich!"',answer:'muito prazer',hint:'Muito = sehr'},
+{type:'match',prompt:'Verbinde',pairs:[['Meu nome é','Mein Name ist'],['Eu sou de','Ich bin aus'],['Muito prazer','Freut mich'],['Me chamo','Ich heiße']]},
+]},
+]},
+{id:'a1u2',lvl:'A1',title:'Números & Cores',desc:'Zahlen 0-20, Farben, Genus',color:'#3b82f6',bg:'#dbeafe',lessons:[
+{id:'a1u2l1',title:'Zahlen 0-20',xp:15,exercises:[
+{type:'info',title:'Zahlen',content:'0 zero · 1 um · 2 dois · 3 três · 4 quatro · 5 cinco\n6 seis · 7 sete · 8 oito · 9 nove · 10 dez\n11 onze · 12 doze · 13 treze · 14 catorze · 15 quinze\n16 dezesseis · 17 dezessete · 18 dezoito · 19 dezenove · 20 vinte\n\n📝 Genus: um/uma, dois/duas'},
+{type:'pick',prompt:'„Cinco" = ?',options:['3','4','5','6'],correct:2,audio:'cinco'},
+{type:'write',prompt:'Zahl 7 auf Portugiesisch',answer:'sete',hint:'S-E-T-E'},
+{type:'match',prompt:'Verbinde',pairs:[['três','3'],['seis','6'],['doze','12'],['vinte','20']]},
+{type:'fill',sentence:'___ cafés, por favor.',blank:'dois',hint:'Zwei (männl.)'},
+{type:'write',prompt:'Zahl 15',answer:'quinze',hint:'Quin-ze'},
+]},
+{id:'a1u2l2',title:'Farben',xp:20,exercises:[
+{type:'info',title:'Cores',content:'🔴 vermelho/a = rot · 🔵 azul = blau · 🟢 verde = grün\n🟡 amarelo/a = gelb · ⚫ preto/a = schwarz · ⚪ branco/a = weiß\n\n📝 Farbe auf -o → wird -a bei weibl. Nomen:\nO carro <b>vermelho</b> / A casa <b>vermelha</b>\nFarbe auf -e/-Konsonant → ändert sich nicht!'},
+{type:'pick',prompt:'„Verde" = ?',options:['Rot','Grün','Blau'],correct:1,audio:'verde'},
+{type:'match',prompt:'Verbinde',pairs:[['vermelho','rot'],['azul','blau'],['amarelo','gelb'],['preto','schwarz']]},
+{type:'write',prompt:'„Weiß" (männl.)',answer:'branco',hint:'B-R-A-N-C-O'},
+{type:'fill',sentence:'O céu é ___.',blank:'azul',hint:'Himmel = blau'},
+]},
+]},
+{id:'a1u3',lvl:'A1',title:'Artikel & Genus',desc:'O/A/Um/Uma, Plural, Genus-Regeln',color:'#8b5cf6',bg:'#ede9fe',lessons:[
+{id:'a1u3l1',title:'Artikel',xp:20,exercises:[
+{type:'info',title:'Artikel',content:'<b>Bestimmt:</b> o (der) · a (die) · os/as (Plural)\n<b>Unbestimmt:</b> um (ein) · uma (eine)\n\n📝 Faustregel:\n-o Endung → männlich: o livro\n-a Endung → weiblich: a casa\n⚠️ Ausnahmen: o dia, o mapa'},
+{type:'pick',prompt:'___ casa',options:['O','A','Um'],correct:1,audio:'a casa'},
+{type:'fill',sentence:'___ café, por favor.',blank:'um',hint:'Ein Kaffee (männl.)'},
+{type:'match',prompt:'Verbinde',pairs:[['o','carro'],['a','mesa'],['um','café'],['uma','cerveja']]},
+{type:'write',prompt:'„Die Häuser" (Plural)',answer:'as casas',hint:'As + casas'},
+{type:'fill',sentence:'___ água, por favor.',blank:'uma',hint:'Água = weiblich!'},
+]},
+]},
+{id:'a1u4',lvl:'A1',title:'No Café',desc:'Bestellen, Essen & Trinken',color:'#f59e0b',bg:'#fef3c7',lessons:[
+{id:'a1u4l1',title:'Bestellen',xp:20,exercises:[
+{type:'info',title:'Im Café',content:'☕ <b>Um café, por favor</b>\n💧 <b>Uma água</b> · 🍺 <b>Uma cerveja</b>\n💰 <b>Quanto custa?</b> = Wie viel kostet das?\n💰 <b>A conta, por favor</b> = Die Rechnung\n\n📝 <b>Eu quero</b> = Ich möchte (direkt)\n<b>Tem...?</b> = Haben Sie...?\n<b>Gostar de</b> = mögen (immer mit de!)'},
+{type:'pick',prompt:'Höflich Kaffee bestellen:',options:['Quero café!','Um café, por favor'],correct:1,audio:'Um café, por favor'},
+{type:'write',prompt:'„Die Rechnung, bitte"',answer:'a conta por favor',hint:'A conta'},
+{type:'fill',sentence:'___ água, por favor.',blank:'uma',hint:'Água = weiblich'},
+{type:'match',prompt:'Verbinde',pairs:[['café','Kaffee'],['água','Wasser'],['cerveja','Bier'],['suco','Saft']]},
+{type:'write',prompt:'„Wie viel kostet das?"',answer:'quanto custa',hint:'Quanto = wie viel'},
+]},
+]},
+{id:'a1u5',lvl:'A1',title:'Ser & Estar',desc:'Die zwei Verben für „sein"',color:'#ef4444',bg:'#fee2e2',lessons:[
+{id:'a1u5l1',title:'SER (dauerhaft)',xp:25,exercises:[
+{type:'info',title:'SER',content:'<b>SER</b> = sein (dauerhaft, Identität)\n\nEu <b>sou</b> · Você <b>é</b> · Ele/Ela <b>é</b>\nNós <b>somos</b> · Eles <b>são</b>\n\nVerwendung: Identität, Herkunft, Beruf, Charakter'},
+{type:'fill',sentence:'Eu ___ alemão.',blank:'sou',hint:'SER für ich'},
+{type:'pick',prompt:'„Ela é professora" = ?',options:['Er ist Lehrer','Sie ist Lehrerin'],correct:1,audio:'Ela é professora'},
+{type:'write',prompt:'„Wir sind Freunde"',answer:'nós somos amigos',hint:'Nós somos amigos'},
+{type:'match',prompt:'Konjugiere SER',pairs:[['Eu','sou'],['Você','é'],['Nós','somos'],['Eles','são']]},
+]},
+{id:'a1u5l2',title:'ESTAR (temporär)',xp:25,exercises:[
+{type:'info',title:'ESTAR',content:'<b>ESTAR</b> = sein (temporär, Zustand, Ort)\n\nEu <b>estou</b> (tô) · Você <b>está</b> (tá)\nNós <b>estamos</b> · Eles <b>estão</b>\n\nVerwendung: Gefühle, Zustände, Orte'},
+{type:'pick',prompt:'Warum ESTAR bei „Eu estou cansado"?',options:['Immer müde','Müdigkeit ist temporär'],correct:1,audio:'Eu estou cansado'},
+{type:'fill',sentence:'Ela ___ em casa.',blank:'está',hint:'Ort → ESTAR'},
+{type:'write',prompt:'„Ich bin müde" (gerade)',answer:'eu estou cansado',hint:'Temporär → estou'},
+{type:'match',prompt:'Konjugiere ESTAR',pairs:[['Eu','estou'],['Você','está'],['Nós','estamos'],['Eles','estão']]},
+]},
+{id:'a1u5l3',title:'SER vs ESTAR',xp:30,exercises:[
+{type:'info',title:'Vergleich',content:'<b>Selbe Adjektive, andere Bedeutung!</b>\n\nEla <b>é</b> bonita = Sie IST schön (generell)\nEla <b>está</b> bonita = Sie SIEHT heute schön aus\n\n📝 SER → Wer BIN ich? (Wesen)\nESTAR → Wie FÜHLE ich mich? Wo? (Zustand)'},
+{type:'fill',sentence:'Ela ___ bonita. (generell)',blank:'é',hint:'Dauerhaft = SER'},
+{type:'fill',sentence:'Eu ___ cansado. (gerade)',blank:'estou',hint:'Temporär = ESTAR'},
+{type:'write',prompt:'„Sie ist Lehrerin"',answer:'ela é professora',hint:'Beruf = SER'},
+{type:'match',prompt:'SER oder ESTAR?',pairs:[['Eu ___ alemão','sou'],['Eu ___ feliz (gerade)','estou'],['Ela ___ médica','é'],['Ele ___ em casa','está']]},
+]},
+]},
+{id:'a2u1',lvl:'A2',title:'Verbos no Presente',desc:'Regelmäßige Verben (-ar, -er, -ir)',color:'#0d9488',bg:'#ccfbf1',lessons:[
+{id:'a2u1l1',title:'-AR Verben',xp:25,exercises:[
+{type:'info',title:'-AR Verben',content:'<b>FALAR</b> (sprechen):\nEu fal<b>o</b> · Você fal<b>a</b>\nNós fal<b>amos</b> · Eles fal<b>am</b>\n\nWeitere: morar, trabalhar, estudar, gostar, comprar, viajar'},
+{type:'fill',sentence:'Eu ___ português.',blank:'falo',hint:'fal + o'},
+{type:'write',prompt:'nós + trabalhar = ?',answer:'nós trabalhamos',hint:'-amos'},
+{type:'match',prompt:'Konjugiere MORAR',pairs:[['Eu','moro'],['Você','mora'],['Nós','moramos'],['Eles','moram']]},
+{type:'write',prompt:'„Ich arbeite in Berlin"',answer:'eu trabalho em berlim',hint:'trabalh-o em Berlim'},
+]},
+{id:'a2u1l2',title:'-ER und -IR Verben',xp:25,exercises:[
+{type:'info',title:'-ER/-IR',content:'<b>COMER</b>: Eu com<b>o</b> · Você com<b>e</b> · Nós com<b>emos</b> · Eles com<b>em</b>\n<b>ABRIR</b>: Eu abr<b>o</b> · Você abr<b>e</b> · Nós abr<b>imos</b> · Eles abr<b>em</b>\n\n💡 „Eu" ist bei ALLEN: -o!'},
+{type:'fill',sentence:'Eu ___ arroz.',blank:'como',hint:'com + o'},
+{type:'write',prompt:'eles + beber = ?',answer:'eles bebem',hint:'-ER: -em'},
+{type:'match',prompt:'Endungen',pairs:[['-AR nós','-amos'],['-ER nós','-emos'],['-IR nós','-imos'],['Alle: eu','-o']]},
+{type:'write',prompt:'„Wir essen im Restaurant"',answer:'nós comemos no restaurante',hint:'comemos no restaurante'},
+]},
+]},
+{id:'a2u2',lvl:'A2',title:'Possessiv & Familie',desc:'Meu/Minha, Familienmitglieder',color:'#ec4899',bg:'#fce7f3',lessons:[
+{id:'a2u2l1',title:'Possessivpronomen',xp:25,exercises:[
+{type:'info',title:'Mein, Dein...',content:'<b>Meu/Minha</b> = Mein(e)\nmeu carro · minha casa\n<b>Seu/Sua</b> = Dein(e)\n<b>Nosso/Nossa</b> = Unser(e)\n<b>Dele/Dela</b> = Sein/Ihr (eindeutig!)\n\n📝 Richtet sich nach Genus des BESITZES!'},
+{type:'fill',sentence:'___ nome é Pedro.',blank:'meu',hint:'Name = männlich'},
+{type:'write',prompt:'„unsere Stadt"',answer:'nossa cidade',hint:'Nossa + cidade'},
+{type:'match',prompt:'Verbinde',pairs:[['meu carro','mein Auto'],['minha casa','mein Haus'],['nosso amigo','unser Freund'],['nossa cidade','unsere Stadt']]},
+]},
+{id:'a2u2l2',title:'Familie',xp:20,exercises:[
+{type:'info',title:'Família',content:'👨 pai = Vater · 👩 mãe = Mutter\n👦 filho = Sohn · 👧 filha = Tochter\n🧑 irmão = Bruder · irmã = Schwester\n👴 avô = Opa · 👵 avó = Oma\n\n📝 Eu tenho = Ich habe\nEu sou casado/a = Ich bin verheiratet'},
+{type:'pick',prompt:'„Mãe" = ?',options:['Vater','Mutter','Oma'],correct:1,audio:'mãe'},
+{type:'match',prompt:'Verbinde',pairs:[['pai','Vater'],['irmão','Bruder'],['filha','Tochter'],['avó','Oma']]},
+{type:'fill',sentence:'Eu ___ dois irmãos.',blank:'tenho',hint:'ter → tenho'},
+]},
+]},
+{id:'a2u3',lvl:'A2',title:'Pretérito Perfeito',desc:'Vergangenheit',color:'#7c3aed',bg:'#ede9fe',lessons:[
+{id:'a2u3l1',title:'Regelmäßig',xp:30,exercises:[
+{type:'info',title:'Pretérito',content:'-AR: Eu -ei · Você -ou · Nós -amos · Eles -aram\n-ER: Eu -i · Você -eu · Nós -emos · Eles -eram\n-IR: Eu -i · Você -iu · Nós -imos · Eles -iram\n\n📝 Nós sieht gleich aus wie Präsens!'},
+{type:'fill',sentence:'Eu ___ com ela ontem.',blank:'falei',hint:'-AR: eu = -ei'},
+{type:'write',prompt:'eu + comprar (Verg.)',answer:'eu comprei',hint:'-ei'},
+{type:'match',prompt:'FALAR Pretérito',pairs:[['Eu','falei'],['Você','falou'],['Nós','falamos'],['Eles','falaram']]},
+]},
+{id:'a2u3l2',title:'Unregelmäßig',xp:30,exercises:[
+{type:'info',title:'Unregelmäßig',content:'<b>IR/SER</b>: fui, foi, fomos, foram\n<b>TER</b>: tive, teve, tivemos\n<b>FAZER</b>: fiz, fez, fizemos\n<b>ESTAR</b>: estive, esteve\n\n📝 Auswendig lernen!'},
+{type:'pick',prompt:'„Eu fui" kann heißen...',options:['Nur „ich ging"','"ich ging" ODER „ich war"'],correct:1,audio:'Eu fui ao cinema'},
+{type:'fill',sentence:'Ela ___ ao mercado.',blank:'foi',hint:'ir → foi'},
+{type:'write',prompt:'eu + fazer (Verg.)',answer:'eu fiz',hint:'fiz'},
+{type:'match',prompt:'Formen',pairs:[['Eu fui','ich ging/war'],['Eu tive','ich hatte'],['Eu fiz','ich machte'],['Eu estive','ich war (temp.)']]},
+]},
+]},
+{id:'a2u4',lvl:'A2',title:'Alltag & Uhrzeit',desc:'Wochentage, Uhrzeit, Routinen',color:'#2563eb',bg:'#dbeafe',lessons:[
+{id:'a2u4l1',title:'Wochentage & Uhrzeit',xp:20,exercises:[
+{type:'info',title:'Tage & Uhrzeit',content:'Segunda=Mo · Terça=Di · Quarta=Mi · Quinta=Do · Sexta=Fr · Sábado=Sa · Domingo=So\n\n🕐 Que horas são?\nÉ uma hora · São duas · São três e meia (3:30)'},
+{type:'pick',prompt:'Quarta = ?',options:['Mo','Di','Mi','Do'],correct:2,audio:'Quarta-feira'},
+{type:'match',prompt:'Tage',pairs:[['Segunda','Montag'],['Sexta','Freitag'],['Sábado','Samstag'],['Domingo','Sonntag']]},
+{type:'write',prompt:'„Wie spät ist es?"',answer:'que horas são',hint:'Que horas são?'},
+]},
+{id:'a2u4l2',title:'Tagesablauf',xp:25,exercises:[
+{type:'info',title:'Routine',content:'☀️ Eu acordo às 7h = Ich wache um 7 auf\n🚿 Eu tomo banho = Ich dusche\n☕ Eu tomo café da manhã = Ich frühstücke\n💼 Eu trabalho das 9 às 17\n😴 Eu durmo às 23h'},
+{type:'fill',sentence:'Eu ___ às 7 horas.',blank:'acordo',hint:'acordar → acordo'},
+{type:'write',prompt:'„Ich dusche"',answer:'eu tomo banho',hint:'Tomar banho'},
+{type:'match',prompt:'Verbinde',pairs:[['acordar','aufwachen'],['almoçar','Mittagessen'],['jantar','Abendessen'],['dormir','schlafen']]},
+]},
+]},
+{id:'a2u5',lvl:'A2',title:'Futuro & Pläne',desc:'Zukunft mit IR + Infinitiv',color:'#059669',bg:'#d1fae5',lessons:[
+{id:'a2u5l1',title:'Zukunft mit IR',xp:25,exercises:[
+{type:'info',title:'IR + Infinitiv',content:'Eu <b>vou</b> falar = Ich werde sprechen\nVocê <b>vai</b> comer\nNós <b>vamos</b> estudar\nEles <b>vão</b> trabalhar\n\n📝 Standard-Zukunft im gesprochenen Brasilianisch!'},
+{type:'fill',sentence:'Eu ___ estudar.',blank:'vou',hint:'ir: eu vou'},
+{type:'pick',prompt:'„Nós vamos viajar" = ?',options:['Wir reisten','Wir werden reisen'],correct:1,audio:'Nós vamos viajar'},
+{type:'write',prompt:'„Was wirst du machen?"',answer:'o que você vai fazer',hint:'O que + vai + fazer'},
+{type:'match',prompt:'IR konjugieren',pairs:[['Eu','vou'],['Você','vai'],['Nós','vamos'],['Eles','vão']]},
+]},
+]},
 ];
-
-const VOCAB_DATA = {
-  'Begrüßungen': [
-    {pt:'Olá',de:'Hallo'},{pt:'Oi',de:'Hi'},{pt:'Bom dia',de:'Guten Morgen'},
-    {pt:'Boa tarde',de:'Guten Nachmittag'},{pt:'Boa noite',de:'Guten Abend'},
-    {pt:'Tchau',de:'Tschüss'},{pt:'Até logo',de:'Bis bald'},{pt:'Até amanhã',de:'Bis morgen'},
-  ],
-  'Grundlagen': [
-    {pt:'Sim',de:'Ja'},{pt:'Não',de:'Nein'},{pt:'Por favor',de:'Bitte'},
-    {pt:'Obrigado/a',de:'Danke'},{pt:'Desculpa',de:'Entschuldigung'},
-    {pt:'Tudo bem?',de:'Alles gut?'},{pt:'Muito prazer',de:'Freut mich'},
-  ],
-  'Essen & Trinken': [
-    {pt:'Café',de:'Kaffee'},{pt:'Água',de:'Wasser'},{pt:'Cerveja',de:'Bier'},
-    {pt:'Suco',de:'Saft'},{pt:'Pão',de:'Brot'},{pt:'Comida',de:'Essen'},
-    {pt:'Comer',de:'Essen (Verb)'},{pt:'Beber',de:'Trinken'},
-  ],
-  'Farben': [
-    {pt:'Vermelho',de:'Rot'},{pt:'Azul',de:'Blau'},{pt:'Verde',de:'Grün'},
-    {pt:'Amarelo',de:'Gelb'},{pt:'Preto',de:'Schwarz'},{pt:'Branco',de:'Weiß'},
-  ],
-  'Pronomen': [
-    {pt:'Eu',de:'Ich'},{pt:'Você',de:'Du'},{pt:'Ele',de:'Er'},
-    {pt:'Ela',de:'Sie'},{pt:'Nós',de:'Wir'},{pt:'Eles/Elas',de:'Sie (Plural)'},
-  ],
-  'Adjektive': [
-    {pt:'Bom / Boa',de:'Gut'},{pt:'Bonito/a',de:'Schön'},{pt:'Grande',de:'Groß'},
-    {pt:'Pequeno/a',de:'Klein'},{pt:'Quente',de:'Heiß'},{pt:'Frio',de:'Kalt'},
-    {pt:'Feliz',de:'Glücklich'},{pt:'Cansado/a',de:'Müde'},
-  ],
-};
-
-const GRAMMAR_DATA = [
-  {
-    title:'📝 Artikel: O / A / Um / Uma', content:'Portugiesisch hat bestimmte und unbestimmte Artikel mit Genus.\n\nBestimmte Artikel:\n• O (der) → o café, o carro\n• A (die) → a casa, a água\n\nUnbestimmte Artikel:\n• Um (ein) → um café\n• Uma (eine) → uma água\n\nPlural: Os / As',
-    table:[['','Männlich','Weiblich'],['Bestimmt','o','a'],['Unbestimmt','um','uma'],['Plural best.','os','as']],
-    examples:[{pt:'O café é bom.',de:'Der Kaffee ist gut.'},{pt:'Uma cerveja, por favor.',de:'Ein Bier, bitte.'}]
-  },
-  {
-    title:'🔄 SER vs ESTAR (sein)', content:'Beide bedeuten "sein", aber werden unterschiedlich verwendet.\n\nSER → dauerhaft (Identität, Herkunft, Beruf)\nESTAR → temporär (Gefühle, Orte, Zustände)',
-    table:[['Pronomen','SER','ESTAR'],['Eu','sou','estou'],['Você','é','está'],['Ele/Ela','é','está'],['Nós','somos','estamos'],['Eles','são','estão']],
-    examples:[{pt:'Eu sou alemão.',de:'Ich bin Deutscher. (immer)'},{pt:'Eu estou cansado.',de:'Ich bin müde. (gerade)'}]
-  },
-  {
-    title:'🚫 Verneinung mit NÃO', content:'Die Verneinung ist einfach: "não" kommt VOR das Verb.\n\nDas ist viel einfacher als im Deutschen!',
-    table:null,
-    examples:[{pt:'Eu não falo português.',de:'Ich spreche nicht Portugiesisch.'},{pt:'Ela não é brasileira.',de:'Sie ist nicht Brasilianerin.'},{pt:'Nós não estamos em casa.',de:'Wir sind nicht zu Hause.'}]
-  },
-  {
-    title:'❓ Fragen stellen', content:'Gute Nachricht: Die Satzstellung ändert sich bei Fragen NICHT!\nMan hebt einfach die Stimme am Ende.\n\nFragewörter:\n• Quem? = Wer?\n• O que? = Was?\n• Onde? = Wo?\n• Quando? = Wann?\n• Por que? = Warum?\n• Como? = Wie?\n• Quanto? = Wie viel?',
-    table:null,
-    examples:[{pt:'Você é brasileiro?',de:'Bist du Brasilianer? (gleiche Satzstellung!)'},{pt:'Onde você mora?',de:'Wo wohnst du?'},{pt:'Quanto custa?',de:'Wie viel kostet das?'}]
-  },
-  {
-    title:'👫 Genus: Männlich & Weiblich', content:'Die meisten Substantive und Adjektive haben ein Genus.\n\nFaustregel:\n• Endet auf -O → meistens männlich\n• Endet auf -A → meistens weiblich\n\nAdjektive passen sich an:\n• Ele é bonito / Ela é bonita\n• O carro é preto / A casa é preta',
-    table:null,
-    examples:[{pt:'O menino é alto.',de:'Der Junge ist groß.'},{pt:'A menina é alta.',de:'Das Mädchen ist groß.'}]
-  },
-];
-
-const SLANG_DATA = [
-  {phrase:"E aí?",meaning:"Was geht?",tone:"Super lässig, unter Freunden",example:"E aí, mano? Tudo bem?"},
-  {phrase:"Beleza!",meaning:"Alles klar! / Cool!",tone:"Zustimmend, entspannt",example:"Vamos às 8? – Beleza!"},
-  {phrase:"Cara / Mano",meaning:"Alter / Kumpel",tone:"Wie 'Dude'",example:"Cara, tu não vai acreditar!"},
-  {phrase:"Tá ligado?",meaning:"Weißt du? / Verstehst du?",tone:"Jugendlich, Straße",example:"Ele é gente boa, tá ligado?"},
-  {phrase:"Valeu!",meaning:"Danke! / Tschüss!",tone:"Informell",example:"Valeu, mano! Falou!"},
-  {phrase:"Que massa!",meaning:"Wie geil! / Wie cool!",tone:"Begeistert",example:"Ganhei um carro novo! – Que massa!"},
-  {phrase:"Tô nem aí",meaning:"Juckt mich nicht",tone:"Gleichgültig",example:"Tô nem aí pro que ele fala."},
-  {phrase:"Pô!",meaning:"Mensch! / Ach Mann!",tone:"Frustriert / Überrascht",example:"Pô, esqueci a carteira!"},
-  {phrase:"Saudade",meaning:"Sehnsucht (unübersetzbar!)",tone:"Emotional, tief",example:"Tô com saudade de você."},
-  {phrase:"Gata / Gato",meaning:"Hübsche / Heißer Typ",tone:"Flirty",example:"Olha aquela gata!"},
-  {phrase:"Falou!",meaning:"Abgemacht! / Tschüss!",tone:"Lässig",example:"Amanhã às 10, falou!"},
-  {phrase:"Caramba!",meaning:"Wow! / Verdammt!",tone:"Überrascht",example:"Caramba, que jogo!"},
-  {phrase:"Pode crer!",meaning:"Stimmt! / Ja voll!",tone:"Bestätigend",example:"Essa pizza é a melhor. – Pode crer!"},
-  {phrase:"Tô de boa",meaning:"Ich chill / Mir geht's gut",tone:"Relaxed",example:"Quer sair? – Nah, tô de boa."},
-  {phrase:"Mermão",meaning:"Bruder (meu irmão)",tone:"Rio-Slang",example:"Mermão, para com isso!"},
-  {phrase:"Suave",meaning:"Easy / Kein Problem",tone:"Gelassen",example:"Deu pra fazer? – Suave!"},
-  {phrase:"Partiu!",meaning:"Los geht's!",tone:"Aufbruch",example:"Partiu praia!"},
-  {phrase:"Vacilou",meaning:"Fail / Mist gebaut",tone:"Spielerisch vorwurfsvoll",example:"Vacilou, hein!"},
-  {phrase:"Bora!",meaning:"Komm! Los!",tone:"Energisch",example:"Bora almoçar?"},
-  {phrase:"Zoar",meaning:"Verarschen / Rumalbern",tone:"Unter Kumpels",example:"Para de me zoar!"},
-];
-
-// ═══════════════════════════════════════════
+const VOCAB={'Begrüßungen':[{pt:'Olá',de:'Hallo'},{pt:'Oi',de:'Hi'},{pt:'Bom dia',de:'Guten Morgen'},{pt:'Boa tarde',de:'Guten Nachmittag'},{pt:'Boa noite',de:'Guten Abend'},{pt:'Tchau',de:'Tschüss'},{pt:'Até logo',de:'Bis bald'}],'Grundlagen':[{pt:'Sim',de:'Ja'},{pt:'Não',de:'Nein'},{pt:'Por favor',de:'Bitte'},{pt:'Obrigado/a',de:'Danke'},{pt:'Desculpa',de:'Entschuldigung'},{pt:'Muito prazer',de:'Freut mich'}],'Essen':[{pt:'Café',de:'Kaffee'},{pt:'Água',de:'Wasser'},{pt:'Cerveja',de:'Bier'},{pt:'Suco',de:'Saft'},{pt:'Pão',de:'Brot'},{pt:'Comer',de:'essen'},{pt:'Beber',de:'trinken'}],'Farben':[{pt:'Vermelho',de:'Rot'},{pt:'Azul',de:'Blau'},{pt:'Verde',de:'Grün'},{pt:'Amarelo',de:'Gelb'},{pt:'Preto',de:'Schwarz'},{pt:'Branco',de:'Weiß'}],'Zahlen':[{pt:'Um',de:'1'},{pt:'Dois',de:'2'},{pt:'Três',de:'3'},{pt:'Cinco',de:'5'},{pt:'Sete',de:'7'},{pt:'Dez',de:'10'},{pt:'Quinze',de:'15'},{pt:'Vinte',de:'20'}],'Pronomen':[{pt:'Eu',de:'Ich'},{pt:'Você',de:'Du'},{pt:'Ele',de:'Er'},{pt:'Ela',de:'Sie'},{pt:'Nós',de:'Wir'},{pt:'Eles',de:'Sie (Pl.)'}],'Adjektive':[{pt:'Bom',de:'Gut'},{pt:'Bonito',de:'Schön'},{pt:'Grande',de:'Groß'},{pt:'Pequeno',de:'Klein'},{pt:'Feliz',de:'Glücklich'},{pt:'Cansado',de:'Müde'}],'Familie':[{pt:'Pai',de:'Vater'},{pt:'Mãe',de:'Mutter'},{pt:'Filho',de:'Sohn'},{pt:'Irmão',de:'Bruder'},{pt:'Avô',de:'Opa'},{pt:'Marido',de:'Ehemann'}],'Alltag':[{pt:'Acordar',de:'Aufwachen'},{pt:'Dormir',de:'Schlafen'},{pt:'Trabalhar',de:'Arbeiten'},{pt:'Estudar',de:'Lernen'},{pt:'Comprar',de:'Kaufen'},{pt:'Viajar',de:'Reisen'}]};
+const GRAM=[{title:'📝 Artikel',content:'Bestimmt: o/a · Unbestimmt: um/uma\nFaustregel: -o=männl., -a=weibl.',table:[['','Männl.','Weibl.'],['Best.','o/os','a/as'],['Unbest.','um','uma']],ex:[{pt:'O café é bom.',de:'Der Kaffee ist gut.'},{pt:'Uma cerveja, por favor.',de:'Ein Bier, bitte.'}]},{title:'🔄 SER vs ESTAR',content:'SER = dauerhaft (Wesen)\nESTAR = temporär (Zustand, Ort)',table:[['','SER','ESTAR'],['Eu','sou','estou'],['Você','é','está'],['Nós','somos','estamos'],['Eles','são','estão']],ex:[{pt:'Eu sou alemão.',de:'Ich bin Deutscher.'},{pt:'Eu estou cansado.',de:'Ich bin müde (gerade).'}]},{title:'📊 Präsens',content:'-AR/-ER/-IR Endungen:',table:[['','−AR','−ER','−IR'],['Eu','−o','−o','−o'],['Você','−a','−e','−e'],['Nós','−amos','−emos','−imos'],['Eles','−am','−em','−em']],ex:[{pt:'Eu falo português.',de:'Ich spreche Portugiesisch.'},{pt:'Nós comemos arroz.',de:'Wir essen Reis.'}]},{title:'⏮️ Pretérito',content:'Vergangenheit:',table:[['','−AR','−ER','−IR'],['Eu','−ei','−i','−i'],['Você','−ou','−eu','−iu'],['Nós','−amos','−emos','−imos'],['Eles','−aram','−eram','−iram']],ex:[{pt:'Eu falei com ela.',de:'Ich sprach mit ihr.'}]},{title:'🔮 Futur',content:'IR + Infinitiv:',table:[['','IR'],['Eu','vou'],['Você','vai'],['Nós','vamos'],['Eles','vão']],ex:[{pt:'Eu vou viajar.',de:'Ich werde reisen.'}]},{title:'🚫 Verneinung',content:'Não VOR das Verb!',table:null,ex:[{pt:'Eu não falo inglês.',de:'Ich spreche kein Englisch.'}]},{title:'❓ Fragen',content:'Satzstellung ändert sich nicht!\nQuem, O que, Onde, Quando, Por que, Como, Quanto',table:null,ex:[{pt:'Onde você mora?',de:'Wo wohnst du?'}]},{title:'👫 Possessiv',content:'Richtet sich nach Genus des Besitzes:',table:[['','M','W'],['Mein','meu','minha'],['Dein','seu','sua'],['Unser','nosso','nossa']],ex:[{pt:'Meu carro.',de:'Mein Auto.'},{pt:'Minha casa.',de:'Mein Haus.'}]}];
+const SLANG=[{phrase:"E aí?",meaning:"Was geht?",tone:"Lässig",example:"E aí, mano?"},{phrase:"Beleza!",meaning:"Alles klar!",tone:"Zustimmend",example:"Beleza, vamos!"},{phrase:"Cara/Mano",meaning:"Alter/Kumpel",tone:"Wie Dude",example:"Cara, sério?"},{phrase:"Tá ligado?",meaning:"Weißt du?",tone:"Jugendlich",example:"Tá ligado, mano?"},{phrase:"Valeu!",meaning:"Danke/Tschüss",tone:"Informell",example:"Valeu, falou!"},{phrase:"Que massa!",meaning:"Wie geil!",tone:"Begeistert",example:"Que massa!"},{phrase:"Tô nem aí",meaning:"Juckt mich nicht",tone:"Gleichgültig",example:"Tô nem aí."},{phrase:"Pô!",meaning:"Mensch!",tone:"Frustration",example:"Pô, esqueci!"},{phrase:"Saudade",meaning:"Sehnsucht",tone:"Emotional",example:"Saudade de você."},{phrase:"Gata/Gato",meaning:"Hübsche/r",tone:"Flirty",example:"Olha aquela gata!"},{phrase:"Falou!",meaning:"Abgemacht!",tone:"Lässig",example:"Amanhã, falou!"},{phrase:"Caramba!",meaning:"Wow!",tone:"Überrascht",example:"Caramba!"},{phrase:"Pode crer!",meaning:"Stimmt!",tone:"Bestätigend",example:"Pode crer!"},{phrase:"Tô de boa",meaning:"Ich chill",tone:"Relaxed",example:"Tô de boa."},{phrase:"Mermão",meaning:"Bruder",tone:"Rio-Slang",example:"Mermão!"},{phrase:"Suave",meaning:"Easy",tone:"Gelassen",example:"Suave!"},{phrase:"Partiu!",meaning:"Los!",tone:"Aufbruch",example:"Partiu praia!"},{phrase:"Vacilou",meaning:"Fail",tone:"Spielerisch",example:"Vacilou!"},{phrase:"Bora!",meaning:"Komm!",tone:"Energisch",example:"Bora!"},{phrase:"Zoar",meaning:"Verarschen",tone:"Kumpels",example:"Para de zoar!"}];
 // STATE
-// ═══════════════════════════════════════════
-let state = {
-  xp: 0, streak: 1, screen: 'home',
-  completedLessons: {},
-  currentUnit: null,
-  currentLesson: null,
-  exerciseIdx: 0,
-  hearts: 3,
-  lessonXP: 0,
-  selected: null,
-  answered: false,
-  matchState: null,
-  bankWords: null,
-  flippedVocab: {},
-  openSlang: -1,
-};
+let S={scr:'home',done:{},curU:null,curL:null,exIdx:0,sel:null,ans:false,ms:null,_wv:null,_wc:null,flipV:{},openSl:-1};
 
-// ═══════════════════════════════════════════
-// NAVIGATION
-// ═══════════════════════════════════════════
-function goScreen(name) {
-  state.screen = name;
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-' + name).classList.add('active');
-  document.querySelectorAll('.bnav-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.screen === name);
+// NAV
+function go(s){S.scr=s;document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById('scr-'+s).classList.add('active');document.querySelectorAll('.bnav').forEach(b=>b.classList.toggle('active',b.dataset.s===s));rr();}
+function rr(){
+  const d=Object.keys(S.done).length,t=C.reduce((s,u)=>s+u.lessons.length,0);
+  document.getElementById('lvl').textContent=d>=t*0.5?'A2':'A1';
+  if(S.scr==='home')rHome();else if(S.scr==='unit')rUnit();else if(S.scr==='ex')rEx();else if(S.scr==='vocab')rVocab();else if(S.scr==='gram')rGram();else if(S.scr==='slang')rSlang();
+}
+
+// HOME
+function rHome(){
+  const c=document.getElementById('scr-home');
+  let h='<div style="margin:18px 0 22px"><h2 class="sec-title">Dein Lernpfad</h2><p class="sec-sub">A1 → A2 strukturiert wie ein Lehrbuch</p></div>';
+  C.forEach((u,ui)=>{
+    const done=u.lessons.filter(l=>S.done[l.id]).length;
+    const pct=Math.round((done/u.lessons.length)*100);
+    const locked=ui>0&&!C[ui-1].lessons.every(l=>S.done[l.id]);
+    h+='<div class="unit'+(locked?' locked':'')+'" onclick="'+(locked?'':'openU(\''+u.id+'\')')+'">';
+    h+='<span class="unit-tag" style="background:'+u.bg+';color:'+u.color+'">'+u.lvl+' · Einheit '+(ui+1)+'</span>';
+    if(locked)h+='<span style="float:right;font-size:18px">🔒</span>';
+    else if(done===u.lessons.length)h+='<span style="float:right;font-size:18px">✅</span>';
+    h+='<h3>'+u.title+'</h3><p>'+u.desc+'</p>';
+    h+='<div class="unit-bar"><div class="unit-bar-fill" style="width:'+pct+'%;background:'+u.color+'"></div></div>';
+    h+='<div class="unit-meta"><span>'+done+'/'+u.lessons.length+' Lektionen</span><span>'+pct+'%</span></div></div>';
   });
-  render();
+  c.innerHTML=h;
+}
+function openU(uid){S.curU=uid;S.scr='unit';document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById('scr-unit').classList.add('active');rr();}
+
+// UNIT
+function rUnit(){
+  const u=C.find(x=>x.id===S.curU);if(!u)return;
+  const c=document.getElementById('scr-unit');
+  let h='<button class="back-btn" onclick="go(\'home\')">← Zurück</button>';
+  h+='<span class="unit-tag" style="background:'+u.bg+';color:'+u.color+';margin-bottom:10px">'+u.lvl+'</span>';
+  h+='<h2 class="sec-title">'+u.title+'</h2><p class="sec-sub">'+u.desc+'</p>';
+  u.lessons.forEach((l,li)=>{
+    const done=S.done[l.id];const prev=li===0||S.done[u.lessons[li-1].id];const locked=!prev&&li>0;
+    h+='<div class="lesson-item'+(done?' done':'')+(locked?' locked':'')+'" onclick="'+(locked?'':'startL(\''+u.id+'\',\''+l.id+'\')')+'">';
+    h+='<div class="lesson-icon" style="background:'+(done?u.bg:'#f5f5f5')+'">'+(locked?'🔒':'📝')+'</div>';
+    h+='<div class="lesson-info"><h4>'+l.title+'</h4><p>'+l.exercises.length+' Übungen</p></div>';
+    if(done)h+='<span style="color:var(--green);font-size:18px">✓</span>';
+    h+='</div>';
+  });
+  c.innerHTML=h;
 }
 
-function updateStats() {
-  document.getElementById('xp-display').textContent = state.xp;
-  document.getElementById('streak-display').textContent = state.streak;
-  const totalLessons = CURRICULUM.reduce((s, u) => s + u.lessons.length, 0);
-  const done = Object.keys(state.completedLessons).length;
-  document.getElementById('level-display').textContent = done >= totalLessons * 0.6 ? 'A2' : 'A1';
-}
-
-function render() {
-  updateStats();
-  if (state.screen === 'home') renderHome();
-  else if (state.screen === 'unit') renderUnit();
-  else if (state.screen === 'exercise') renderExercise();
-  else if (state.screen === 'vocab') renderVocab();
-  else if (state.screen === 'grammar') renderGrammar();
-  else if (state.screen === 'slang') renderSlangScreen();
-}
-
-// ═══════════════════════════════════════════
-// HOME – Unit Map
-// ═══════════════════════════════════════════
-function renderHome() {
-  const c = document.getElementById('screen-home');
-  let prevDone = true;
-  c.innerHTML = `
-    <div style="margin:20px 0 24px;">
-      <h2 class="sec-title">Dein Lernpfad</h2>
-      <p class="sec-sub">A1 → A2 Schritt für Schritt</p>
-    </div>
-    ${CURRICULUM.map((u, ui) => {
-      const lessons = u.lessons;
-      const done = lessons.filter(l => state.completedLessons[l.id]).length;
-      const pct = Math.round((done / lessons.length) * 100);
-      const locked = !prevDone && ui > 0;
-      if (done === lessons.length) prevDone = true;
-      else if (ui > 0) {
-        const prevUnit = CURRICULUM[ui - 1];
-        prevDone = prevUnit.lessons.every(l => state.completedLessons[l.id]);
-      }
-      const isLocked = ui > 0 && !CURRICULUM[ui - 1].lessons.every(l => state.completedLessons[l.id]);
-      return `
-        <div class="unit ${isLocked ? 'locked' : ''}" onclick="${isLocked ? '' : `openUnit('${u.id}')`}">
-          <div class="unit-top">
-            <span class="unit-num" style="background:${u.bgColor};color:${u.color};">Einheit ${ui + 1}</span>
-            ${isLocked ? '<span class="unit-lock">🔒</span>' : done === lessons.length ? '<span class="unit-lock">✅</span>' : ''}
-          </div>
-          <h3>${u.title}</h3>
-          <p>${u.desc}</p>
-          <div class="unit-progress">
-            <div class="unit-bar"><div class="unit-bar-fill" style="width:${pct}%;background:${u.color};"></div></div>
-            <div class="unit-label"><span>${done}/${lessons.length} Lektionen</span><span>${pct}%</span></div>
-          </div>
-        </div>
-      `;
-    }).join('')}
-  `;
-}
-
-function openUnit(uid) {
-  state.currentUnit = uid;
-  state.screen = 'unit';
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-unit').classList.add('active');
-  render();
-}
-
-// ═══════════════════════════════════════════
-// UNIT – Lesson List
-// ═══════════════════════════════════════════
-function renderUnit() {
-  const unit = CURRICULUM.find(u => u.id === state.currentUnit);
-  if (!unit) return;
-  const c = document.getElementById('screen-unit');
-  c.innerHTML = `
-    <button class="back-btn" onclick="goScreen('home')">← Zurück</button>
-    <div style="margin-bottom:20px;">
-      <span class="unit-num" style="background:${unit.bgColor};color:${unit.color};display:inline-block;margin-bottom:8px;">Einheit</span>
-      <h2 class="sec-title">${unit.title}</h2>
-      <p class="sec-sub">${unit.desc}</p>
-    </div>
-    <div class="lesson-list">
-      ${unit.lessons.map((l, li) => {
-        const done = state.completedLessons[l.id];
-        const prevDone = li === 0 || state.completedLessons[unit.lessons[li - 1].id];
-        const locked = !prevDone && li > 0;
-        const iconBg = done ? unit.bgColor : locked ? '#f5f5f5' : unit.bgColor;
-        const icons = { mixed: '📝', vocab: '🔤', grammar: '📐' };
-        return `
-          <div class="lesson-item ${done ? 'done' : ''} ${locked ? 'locked' : ''}"
-               onclick="${locked ? '' : `startLesson('${unit.id}','${l.id}')`}">
-            <div class="lesson-icon" style="background:${iconBg};">${locked ? '🔒' : icons[l.type] || '📝'}</div>
-            <div class="lesson-info">
-              <h4>${l.title}</h4>
-              <p>${l.xp} XP · ${l.exercises.length} Übungen</p>
-            </div>
-            ${done ? '<span class="lesson-check">✓</span>' : ''}
-          </div>
-        `;
-      }).join('')}
-    </div>
-  `;
-}
-
-// ═══════════════════════════════════════════
 // START LESSON
-// ═══════════════════════════════════════════
-function startLesson(uid, lid) {
-  state.currentUnit = uid;
-  state.currentLesson = lid;
-  state.exerciseIdx = 0;
-  state.hearts = 3;
-  state.lessonXP = 0;
-  state.selected = null;
-  state.answered = false;
-  state.matchState = null;
-  state.bankWords = null;
-  state.screen = 'exercise';
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-exercise').classList.add('active');
-  render();
+function startL(uid,lid){
+  S.curU=uid;S.curL=lid;S.exIdx=0;S.sel=null;S.ans=false;S.ms=null;S._wv=null;S._wc=null;
+  S.scr='ex';document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById('scr-ex').classList.add('active');rr();
+}
+function getL(){const u=C.find(x=>x.id===S.curU);return u?u.lessons.find(l=>l.id===S.curL):null;}
+
+// EXERCISE
+function rEx(){
+  const l=getL();if(!l)return;const exs=l.exercises,ex=exs[S.exIdx];
+  if(!ex){showDone();return;}
+  const c=document.getElementById('scr-ex');
+  const pct=((S.exIdx)/exs.length)*100;
+  let body='';
+  if(ex.type==='info')body=rInfo(ex);
+  else if(ex.type==='pick')body=rPick(ex);
+  else if(ex.type==='write')body=rWrite(ex);
+  else if(ex.type==='fill')body=rFill(ex);
+  else if(ex.type==='match')body=rMatch(ex);
+  c.innerHTML='<div style="padding-top:10px"><div class="ex-bar"><button class="ex-close" onclick="exitL()">✕</button><div class="ex-progress"><div class="ex-progress-fill" style="width:'+pct+'%"></div></div><span class="ex-step">'+(S.exIdx+1)+'/'+exs.length+'</span></div><div class="ex-card">'+body+'</div></div>';
 }
 
-// ═══════════════════════════════════════════
-// EXERCISE RENDERER
-// ═══════════════════════════════════════════
-function getLesson() {
-  const unit = CURRICULUM.find(u => u.id === state.currentUnit);
-  return unit ? unit.lessons.find(l => l.id === state.currentLesson) : null;
+function rInfo(ex){
+  return '<div class="ex-type" style="color:var(--blue)">📖 Lektion</div><div class="info-card"><h4>'+ex.title+'</h4>'+ex.content+'</div><button class="btn btn-g" onclick="nxt()">Verstanden – Weiter →</button>';
 }
 
-function renderExercise() {
-  const lesson = getLesson();
-  if (!lesson) return;
-  const exercises = lesson.exercises;
-  const ex = exercises[state.exerciseIdx];
-  if (!ex) { showComplete(); return; }
-  const c = document.getElementById('screen-exercise');
-  const pct = ((state.exerciseIdx) / exercises.length) * 100;
-  const hearts = '❤️'.repeat(state.hearts) + '🖤'.repeat(3 - state.hearts);
-
-  let body = '';
-  if (ex.type === 'info') body = renderInfoExercise(ex);
-  else if (ex.type === 'pick') body = renderPickExercise(ex);
-  else if (ex.type === 'write') body = renderWriteExercise(ex);
-  else if (ex.type === 'match') body = renderMatchExercise(ex);
-  else if (ex.type === 'fill') body = renderFillExercise(ex);
-
-  c.innerHTML = `
-    <div style="padding-top:12px;">
-      <div class="exercise-bar">
-        <button class="exercise-close" onclick="exitLesson()">✕</button>
-        <div class="exercise-progress"><div class="exercise-progress-fill" style="width:${pct}%"></div></div>
-        <div class="exercise-hearts">${hearts}</div>
-      </div>
-      <div class="exercise-card">${body}</div>
-    </div>
-  `;
+function rPick(ex){
+  let fb='';
+  if(S.ans){const ok=S.sel===ex.correct;fb='<div class="fb '+(ok?'fok':'fno')+'"><span class="fb-i">'+(ok?'✅':'❌')+'</span><div class="fb-t"><strong>'+(ok?'Richtig!':'Falsch!')+'</strong>'+(!ok?' Richtig: <b>'+ex.options[ex.correct]+'</b>':'')+'</div></div>';}
+  let h='<div class="ex-type" style="color:var(--green2)">Wähle die richtige Antwort</div>';
+  h+='<h3 class="ex-prompt">'+ex.prompt+(ex.audio?' <button class="spk" onclick="spk(\''+esc(ex.audio)+'\',event)" title="Anhören">🔊</button>':'')+'</h3>';
+  h+='<div class="options">';
+  ex.options.forEach((o,i)=>{
+    let cls='opt';
+    if(S.ans){cls+=' dis';if(i===ex.correct)cls+=' ok';else if(i===S.sel&&i!==ex.correct)cls+=' no';}
+    else if(S.sel===i)cls+=' sel';
+    h+='<button class="'+cls+'" onclick="pick('+i+')"><span class="opt-l">'+String.fromCharCode(65+i)+'</span>'+o+'</button>';
+  });
+  h+='</div>'+fb;
+  if(S.ans)h+='<button class="btn btn-b" onclick="nxt()">Weiter →</button>';
+  else if(S.sel!==null)h+='<button class="btn btn-g" onclick="chkP()">Prüfen</button>';
+  else h+='<button class="btn btn-g" disabled>Wähle eine Antwort</button>';
+  return h;
 }
 
-function renderInfoExercise(ex) {
-  return `
-    <div class="exercise-type" style="color:var(--blue);">📖 Lektion</div>
-    <h3 class="exercise-prompt">${ex.title}</h3>
-    <div style="font-size:15px;line-height:1.8;white-space:pre-line;color:var(--text);margin-bottom:24px;background:var(--bg2);padding:18px;border-radius:14px;">${ex.content}</div>
-    <button class="check-btn primary" onclick="nextExercise()">Weiter →</button>
-  `;
+function rWrite(ex){
+  let fb='';
+  if(S.ans){const ok=S._wc;fb='<div class="fb '+(ok?'fok':'fno')+'"><span class="fb-i">'+(ok?'✅':'❌')+'</span><div class="fb-t"><strong>'+(ok?'Richtig!':'Nicht ganz.')+'</strong>'+(!ok?' Richtig: <b>'+ex.answer+'</b>':'')+'</div></div>';}
+  let h='<div class="ex-type" style="color:var(--amber)">✏️ Schreib die Antwort</div>';
+  h+='<h3 class="ex-prompt">'+ex.prompt+'</h3>';
+  if(ex.hint)h+='<p class="ex-hint">💡 '+ex.hint+'</p>';
+  h+='<input class="tinput'+(S.ans?(S._wc?' ok':' no'):'')+'" id="winp" placeholder="Deine Antwort..." '+(S.ans?'disabled':'')+' onkeydown="if(event.key===\'Enter\')chkW()" value="'+(S.ans?(S._wv||''):'')+'">'+fb;
+  h+=S.ans?'<button class="btn btn-b" onclick="nxt()">Weiter →</button>':'<button class="btn btn-g" onclick="chkW()">Prüfen</button>';
+  return h;
 }
 
-function renderPickExercise(ex) {
-  let fb = '';
-  if (state.answered) {
-    const isCorrect = state.selected === ex.correct;
-    fb = `<div class="feedback ${isCorrect ? 'correct' : 'wrong'}">
-      <span class="fb-icon">${isCorrect ? '✅' : '❌'}</span>
-      <div class="fb-text"><strong>${isCorrect ? 'Richtig!' : 'Falsch!'}</strong>${!isCorrect ? 'Richtige Antwort: ' + ex.options[ex.correct] : ''}</div>
-    </div>`;
+function rFill(ex){
+  let fb='';
+  if(S.ans){const ok=S._wc;fb='<div class="fb '+(ok?'fok':'fno')+'"><span class="fb-i">'+(ok?'✅':'❌')+'</span><div class="fb-t"><strong>'+(ok?'Richtig!':'Nicht ganz.')+'</strong>'+(!ok?' Richtig: <b>'+ex.blank+'</b>':'')+'</div></div>';}
+  const pts=ex.sentence.split('___');
+  let h='<div class="ex-type" style="color:var(--teal)">📝 Fülle die Lücke</div>';
+  h+='<div class="fill-s">'+pts[0]+'<span class="fill-b">'+(S.ans?S._wv:'?')+'</span>'+(pts[1]||'')+'</div>';
+  if(ex.hint)h+='<p class="ex-hint">💡 '+ex.hint+'</p>';
+  h+='<input class="tinput'+(S.ans?(S._wc?' ok':' no'):'')+'" id="finp" placeholder="Fehlendes Wort..." '+(S.ans?'disabled':'')+' onkeydown="if(event.key===\'Enter\')chkF()" value="'+(S.ans?(S._wv||''):'')+'">'+fb;
+  h+=S.ans?'<button class="btn btn-b" onclick="nxt()">Weiter →</button>':'<button class="btn btn-g" onclick="chkF()">Prüfen</button>';
+  return h;
+}
+
+function rMatch(ex){
+  if(!S.ms){
+    const r=ex.pairs.map((p,i)=>({t:p[1],idx:i}));
+    for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]];}
+    S.ms={right:r,matched:[],sel:null,wf:null};
   }
-  return `
-    <div class="exercise-type" style="color:var(--green2);">Wähle die richtige Antwort</div>
-    <h3 class="exercise-prompt">${ex.prompt}</h3>
-    <div class="options">
-      ${ex.options.map((opt, oi) => {
-        let cls = 'option-btn';
-        if (state.answered) {
-          cls += ' disabled';
-          if (oi === ex.correct) cls += ' correct';
-          else if (oi === state.selected && oi !== ex.correct) cls += ' wrong';
-        } else if (state.selected === oi) cls += ' selected';
-        return `<button class="${cls}" onclick="pickOption(${oi})">
-          <span class="option-letter">${String.fromCharCode(65 + oi)}</span>${opt}
-        </button>`;
-      }).join('')}
-    </div>
-    ${fb}
-    ${state.answered ? `<button class="check-btn next" onclick="nextExercise()">Weiter →</button>` :
-      state.selected !== null ? `<button class="check-btn primary" onclick="checkPick()">Prüfen</button>` :
-      `<button class="check-btn primary" disabled>Wähle eine Antwort</button>`}
-  `;
+  const ms=S.ms,allDone=ms.matched.length===ex.pairs.length;
+  let h='<div class="ex-type" style="color:var(--purple)">🔗 Verbinde die Paare</div><h3 class="ex-prompt">'+ex.prompt+'</h3><div class="match-g"><div>';
+  ex.pairs.forEach((p,i)=>{
+    const m=ms.matched.includes(i),s=ms.sel&&ms.sel.side==='l'&&ms.sel.idx===i;
+    h+='<div class="match-b'+(m?' md':'')+(s?' sl':'')+'" style="margin-bottom:7px" onclick="mClk(\'l\','+i+')">'+p[0]+' <button class="spk" onclick="spk(\''+esc(p[0])+'\',event)">🔊</button></div>';
+  });
+  h+='</div><div>';
+  ms.right.forEach(item=>{
+    const m=ms.matched.includes(item.idx),s=ms.sel&&ms.sel.side==='r'&&ms.sel.idx===item.idx,w=ms.wf&&ms.wf.side==='r'&&ms.wf.idx===item.idx;
+    h+='<div class="match-b'+(m?' md':'')+(s?' sl':'')+(w?' wf':'')+'" style="margin-bottom:7px" onclick="mClk(\'r\','+item.idx+')">'+item.t+'</div>';
+  });
+  h+='</div></div>';
+  if(allDone)h+='<div class="fb fok"><span class="fb-i">✅</span><div class="fb-t"><strong>Alle richtig!</strong></div></div><button class="btn btn-b" onclick="nxt()">Weiter →</button>';
+  return h;
 }
 
-function renderWriteExercise(ex) {
-  let fb = '';
-  if (state.answered) {
-    const input = document.querySelector('.text-input');
-    const val = (state._lastWriteVal || '').toLowerCase().trim();
-    const isCorrect = val === ex.answer.toLowerCase();
-    fb = `<div class="feedback ${isCorrect ? 'correct' : 'wrong'}">
-      <span class="fb-icon">${isCorrect ? '✅' : '❌'}</span>
-      <div class="fb-text"><strong>${isCorrect ? 'Richtig!' : 'Falsch!'}</strong>${!isCorrect ? 'Richtige Antwort: <strong>' + ex.answer + '</strong>' : ''}</div>
-    </div>`;
-  }
-  return `
-    <div class="exercise-type" style="color:var(--amber);">✏️ Schreib die Antwort</div>
-    <h3 class="exercise-prompt">${ex.prompt}</h3>
-    ${ex.hint ? `<p class="exercise-hint">💡 ${ex.hint}</p>` : ''}
-    <div class="text-input-wrap">
-      <input class="text-input ${state.answered ? (state._lastWriteCorrect ? 'correct' : 'wrong') : ''}"
-             id="write-input" placeholder="Schreib hier..."
-             ${state.answered ? 'disabled' : ''}
-             onkeydown="if(event.key==='Enter')checkWrite()"
-             value="${state.answered ? (state._lastWriteVal || '') : ''}">
-    </div>
-    ${fb}
-    ${state.answered ? `<button class="check-btn next" onclick="nextExercise()">Weiter →</button>` :
-      `<button class="check-btn primary" onclick="checkWrite()">Prüfen</button>`}
-  `;
-}
+// Escape quotes for onclick
+function esc(s){return s.replace(/'/g,"\\'").replace(/"/g,'&quot;');}
 
-function renderFillExercise(ex) {
-  let fb = '';
-  if (state.answered) {
-    const val = (state._lastWriteVal || '').toLowerCase().trim();
-    const isCorrect = val === ex.blank.toLowerCase();
-    fb = `<div class="feedback ${isCorrect ? 'correct' : 'wrong'}">
-      <span class="fb-icon">${isCorrect ? '✅' : '❌'}</span>
-      <div class="fb-text"><strong>${isCorrect ? 'Richtig!' : 'Falsch!'}</strong>${!isCorrect ? 'Richtige Antwort: <strong>' + ex.blank + '</strong>' : ''}</div>
-    </div>`;
-  }
-  const parts = ex.sentence.split('___');
-  const filled = state.answered ? (state._lastWriteVal || '') : '___';
-  return `
-    <div class="exercise-type" style="color:var(--teal);">📝 Fülle die Lücke</div>
-    <div class="fill-sentence">${parts[0]}<span class="fill-blank">${state.answered ? state._lastWriteVal : '?'}</span>${parts[1] || ''}</div>
-    ${ex.hint ? `<p class="exercise-hint">💡 ${ex.hint}</p>` : ''}
-    <div class="text-input-wrap">
-      <input class="text-input ${state.answered ? (state._lastWriteCorrect ? 'correct' : 'wrong') : ''}"
-             id="fill-input" placeholder="Fehlendes Wort..."
-             ${state.answered ? 'disabled' : ''}
-             onkeydown="if(event.key==='Enter')checkFill()"
-             value="${state.answered ? (state._lastWriteVal || '') : ''}">
-    </div>
-    ${fb}
-    ${state.answered ? `<button class="check-btn next" onclick="nextExercise()">Weiter →</button>` :
-      `<button class="check-btn primary" onclick="checkFill()">Prüfen</button>`}
-  `;
-}
-
-function renderMatchExercise(ex) {
-  if (!state.matchState) {
-    const left = ex.pairs.map((p, i) => ({ text: p[0], idx: i, side: 'left' }));
-    const right = ex.pairs.map((p, i) => ({ text: p[1], idx: i, side: 'right' }));
-    // Shuffle right side
-    for (let i = right.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [right[i], right[j]] = [right[j], right[i]];
-    }
-    state.matchState = { left, right, matched: [], selected: null, wrongFlash: null };
-  }
-  const ms = state.matchState;
-  const allMatched = ms.matched.length === ex.pairs.length;
-
-  return `
-    <div class="exercise-type" style="color:var(--purple);">🔗 Verbinde die Paare</div>
-    <h3 class="exercise-prompt">${ex.prompt}</h3>
-    <div class="match-grid">
-      <div>
-        ${ms.left.map(item => {
-          const isMatched = ms.matched.includes(item.idx);
-          const isSel = ms.selected && ms.selected.side === 'left' && ms.selected.idx === item.idx;
-          const isWrong = ms.wrongFlash && ms.wrongFlash.side === 'left' && ms.wrongFlash.idx === item.idx;
-          return `<div class="match-btn ${isMatched ? 'matched' : ''} ${isSel ? 'sel' : ''} ${isWrong ? 'wrong-flash' : ''}"
-                       style="margin-bottom:8px;"
-                       onclick="matchClick('left',${item.idx})">${item.text}</div>`;
-        }).join('')}
-      </div>
-      <div>
-        ${ms.right.map(item => {
-          const isMatched = ms.matched.includes(item.idx);
-          const isSel = ms.selected && ms.selected.side === 'right' && ms.selected.idx === item.idx;
-          const isWrong = ms.wrongFlash && ms.wrongFlash.side === 'right' && ms.wrongFlash.idx === item.idx;
-          return `<div class="match-btn ${isMatched ? 'matched' : ''} ${isSel ? 'sel' : ''} ${isWrong ? 'wrong-flash' : ''}"
-                       style="margin-bottom:8px;"
-                       onclick="matchClick('right',${item.idx})">${item.text}</div>`;
-        }).join('')}
-      </div>
-    </div>
-    ${allMatched ? `
-      <div class="feedback correct"><span class="fb-icon">✅</span><div class="fb-text"><strong>Alle richtig!</strong></div></div>
-      <button class="check-btn next" onclick="nextExercise()">Weiter →</button>
-    ` : ''}
-  `;
-}
-
-// ═══════════════════════════════════════════
-// EXERCISE LOGIC
-// ═══════════════════════════════════════════
-function pickOption(idx) {
-  if (state.answered) return;
-  state.selected = idx;
-  render();
-}
-function checkPick() {
-  const lesson = getLesson();
-  const ex = lesson.exercises[state.exerciseIdx];
-  state.answered = true;
-  if (state.selected === ex.correct) {
-    state.lessonXP += 2;
-  } else {
-    state.hearts = Math.max(0, state.hearts - 1);
-  }
-  render();
-}
-function checkWrite() {
-  const input = document.getElementById('write-input');
-  if (!input || !input.value.trim()) return;
-  const lesson = getLesson();
-  const ex = lesson.exercises[state.exerciseIdx];
-  const val = input.value.trim();
-  const isCorrect = val.toLowerCase() === ex.answer.toLowerCase();
-  state._lastWriteVal = val;
-  state._lastWriteCorrect = isCorrect;
-  state.answered = true;
-  if (isCorrect) state.lessonXP += 3;
-  else state.hearts = Math.max(0, state.hearts - 1);
-  render();
-}
-function checkFill() {
-  const input = document.getElementById('fill-input');
-  if (!input || !input.value.trim()) return;
-  const lesson = getLesson();
-  const ex = lesson.exercises[state.exerciseIdx];
-  const val = input.value.trim();
-  const isCorrect = val.toLowerCase() === ex.blank.toLowerCase();
-  state._lastWriteVal = val;
-  state._lastWriteCorrect = isCorrect;
-  state.answered = true;
-  if (isCorrect) state.lessonXP += 3;
-  else state.hearts = Math.max(0, state.hearts - 1);
-  render();
-}
-function matchClick(side, idx) {
-  const ms = state.matchState;
-  if (!ms || ms.matched.includes(idx) && side === 'left') return;
-  if (ms.matched.includes(idx) && side === 'right') return;
-
-  if (!ms.selected) {
-    ms.selected = { side, idx };
-    render();
-  } else if (ms.selected.side === side) {
-    ms.selected = { side, idx };
-    render();
-  } else {
-    // Check match
-    const leftIdx = side === 'left' ? idx : ms.selected.idx;
-    const rightIdx = side === 'right' ? idx : ms.selected.idx;
-    if (leftIdx === rightIdx) {
-      ms.matched.push(leftIdx);
-      ms.selected = null;
-      state.lessonXP += 1;
-      render();
-    } else {
-      ms.wrongFlash = { side, idx };
-      state.hearts = Math.max(0, state.hearts - 1);
-      render();
-      setTimeout(() => { ms.wrongFlash = null; ms.selected = null; render(); }, 600);
-    }
+// LOGIC
+function pick(i){if(S.ans)return;S.sel=i;rr();}
+function chkP(){S.ans=true;rr();}
+function chkW(){const inp=document.getElementById('winp');if(!inp||!inp.value.trim())return;const l=getL(),ex=l.exercises[S.exIdx];S._wv=inp.value.trim();S._wc=S._wv.toLowerCase().replace(/[?.!,]/g,'').trim()===ex.answer.toLowerCase().replace(/[?.!,]/g,'').trim();S.ans=true;rr();}
+function chkF(){const inp=document.getElementById('finp');if(!inp||!inp.value.trim())return;const l=getL(),ex=l.exercises[S.exIdx];S._wv=inp.value.trim();S._wc=S._wv.toLowerCase().trim()===ex.blank.toLowerCase().trim();S.ans=true;rr();}
+function mClk(side,idx){
+  const ms=S.ms;if(!ms)return;
+  if(side==='l'&&ms.matched.includes(idx))return;
+  if(side==='r'&&ms.matched.includes(idx))return;
+  if(!ms.sel){ms.sel={side,idx};rr();}
+  else if(ms.sel.side===side){ms.sel={side,idx};rr();}
+  else{
+    const li=side==='l'?idx:ms.sel.idx,ri=side==='r'?idx:ms.sel.idx;
+    if(li===ri){ms.matched.push(li);ms.sel=null;rr();}
+    else{ms.wf={side,idx};rr();setTimeout(()=>{ms.wf=null;ms.sel=null;rr();},500);}
   }
 }
-function nextExercise() {
-  state.exerciseIdx++;
-  state.selected = null;
-  state.answered = false;
-  state.matchState = null;
-  state._lastWriteVal = null;
-  state._lastWriteCorrect = null;
-  render();
-}
-function exitLesson() {
-  state.screen = 'unit';
-  state.matchState = null;
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-unit').classList.add('active');
-  render();
+function nxt(){S.exIdx++;S.sel=null;S.ans=false;S.ms=null;S._wv=null;S._wc=null;rr();}
+function exitL(){S.scr='unit';S.ms=null;document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById('scr-unit').classList.add('active');rr();}
+function showDone(){
+  const l=getL();S.done[l.id]=true;
+  document.getElementById('scr-ex').innerHTML='<div class="complete"><div class="em">🎉</div><h2>Lektion abgeschlossen!</h2><p style="color:var(--text2);margin-bottom:24px">'+l.title+'</p><button class="btn btn-g" style="max-width:280px;margin:0 auto" onclick="go(\'unit\')">Weiter lernen →</button></div>';
+  rr();
 }
 
-function showComplete() {
-  const lesson = getLesson();
-  state.completedLessons[lesson.id] = true;
-  state.xp += state.lessonXP + lesson.xp;
-  const c = document.getElementById('screen-exercise');
-  c.innerHTML = `
-    <div class="complete-screen">
-      <div class="complete-emoji">🎉</div>
-      <h2>Lektion geschafft!</h2>
-      <p class="sub">${lesson.title}</p>
-      <div class="complete-stats">
-        <div class="complete-stat"><div class="val" style="color:var(--amber);">+${state.lessonXP + lesson.xp}</div><div class="lbl">XP verdient</div></div>
-        <div class="complete-stat"><div class="val" style="color:var(--red);">${state.hearts}/3</div><div class="lbl">Herzen übrig</div></div>
-        <div class="complete-stat"><div class="val" style="color:var(--green);">✓</div><div class="lbl">Abgeschlossen</div></div>
-      </div>
-      <button class="check-btn primary" onclick="goScreen('unit');render();" style="max-width:300px;margin:0 auto;">Weiter lernen →</button>
-    </div>
-  `;
-  updateStats();
-}
-
-// ═══════════════════════════════════════════
 // VOCAB
-// ═══════════════════════════════════════════
-function renderVocab() {
-  const c = document.getElementById('screen-vocab');
-  c.innerHTML = `
-    <div style="margin:20px 0 20px;">
-      <h2 class="sec-title">🔤 Vokabeln</h2>
-      <p class="sec-sub">Klick zum Aufdecken. Lerne Schritt für Schritt.</p>
-    </div>
-    ${Object.entries(VOCAB_DATA).map(([cat, words]) => `
-      <div class="vocab-cat-title">${cat}</div>
-      <div class="vocab-grid" style="margin-bottom:12px;">
-        ${words.map((w, i) => {
-          const key = cat + i;
-          const flipped = state.flippedVocab[key];
-          return `<div class="vocab-card ${flipped ? 'flipped' : ''}" onclick="flipVocab('${key}')">
-            <div class="vocab-word">${w.pt}</div>
-            <div class="vocab-trans">${flipped ? w.de : '• • •'}</div>
-          </div>`;
-        }).join('')}
-      </div>
-    `).join('')}
-  `;
+function rVocab(){
+  const c=document.getElementById('scr-vocab');
+  let h='<div style="margin:18px 0 18px"><h2 class="sec-title">🔤 Vokabeln</h2><p class="sec-sub">Klick zum Aufdecken · 🔊 zum Anhören</p></div>';
+  Object.entries(VOCAB).forEach(([cat,words])=>{
+    h+='<div class="voc-cat">'+cat+'</div><div class="voc-grid">';
+    words.forEach((w,i)=>{
+      const k=cat+i,fl=S.flipV[k];
+      h+='<div class="voc-card'+(fl?' fl':'')+'" onclick="flipV(\''+k+'\')"><button class="voc-spk" onclick="spk(\''+esc(w.pt)+'\',event)" title="Anhören">🔊</button><div class="voc-w">'+w.pt+'</div><div class="voc-d">'+(fl?w.de:'• • •')+'</div></div>';
+    });
+    h+='</div>';
+  });
+  c.innerHTML=h;
 }
-function flipVocab(key) {
-  state.flippedVocab[key] = !state.flippedVocab[key];
-  renderVocab();
-}
+function flipV(k){S.flipV[k]=!S.flipV[k];rVocab();}
 
-// ═══════════════════════════════════════════
 // GRAMMAR
-// ═══════════════════════════════════════════
-function renderGrammar() {
-  const c = document.getElementById('screen-grammar');
-  c.innerHTML = `
-    <div style="margin:20px 0 20px;">
-      <h2 class="sec-title">📐 Grammatik</h2>
-      <p class="sec-sub">Die wichtigsten Regeln – einfach erklärt.</p>
-    </div>
-    ${GRAMMAR_DATA.map(g => `
-      <div class="grammar-card">
-        <h3>${g.title}</h3>
-        <p>${g.content}</p>
-        ${g.table ? `<table class="grammar-table">
-          ${g.table.map((row, ri) => `<tr>${row.map((cell, ci) => ri === 0 ? `<th>${cell}</th>` : `<td>${cell}</td>`).join('')}</tr>`).join('')}
-        </table>` : ''}
-        ${g.examples.map(e => `
-          <div class="grammar-example">
-            <span class="pt">${e.pt}</span><br><span class="de">→ ${e.de}</span>
-          </div>
-        `).join('')}
-      </div>
-    `).join('')}
-  `;
+function rGram(){
+  const c=document.getElementById('scr-gram');
+  let h='<div style="margin:18px 0 18px"><h2 class="sec-title">📐 Grammatik</h2><p class="sec-sub">Ausführlich wie im Lehrbuch</p></div>';
+  GRAM.forEach(g=>{
+    h+='<div class="gram-card"><h3>'+g.title+'</h3><p>'+g.content+'</p>';
+    if(g.table)h+='<table class="gram-table">'+g.table.map((r,ri)=>'<tr>'+r.map(c=>ri===0?'<th>'+c+'</th>':'<td>'+c+'</td>').join('')+'</tr>').join('')+'</table>';
+    g.ex.forEach(e=>h+='<div class="gram-ex"><span class="pt">'+e.pt+'</span> <button class="spk" onclick="spk(\''+esc(e.pt)+'\',event)">🔊</button><br><span class="de">→ '+e.de+'</span></div>');
+    h+='</div>';
+  });
+  c.innerHTML=h;
 }
 
-// ═══════════════════════════════════════════
 // SLANG
-// ═══════════════════════════════════════════
-function renderSlangScreen() {
-  const c = document.getElementById('screen-slang');
-  c.innerHTML = `
-    <div style="margin:20px 0 20px;">
-      <h2 class="sec-title">🗣️ Gírias Brasileiras</h2>
-      <p class="sec-sub">20 Slang-Ausdrücke, die kein Lehrbuch hat.</p>
-    </div>
-    ${SLANG_DATA.map((s, i) => `
-      <div class="slang-item ${state.openSlang === i ? 'open' : ''}" onclick="toggleSlangItem(${i})">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <div>
-            <div class="slang-phrase2">„${s.phrase}"</div>
-            <div class="slang-mean">→ ${s.meaning}</div>
-          </div>
-          <span style="color:var(--purple);font-size:12px;transition:transform 0.3s;${state.openSlang === i ? 'transform:rotate(180deg)' : ''}">▾</span>
-        </div>
-        ${state.openSlang === i ? `
-          <div class="slang-detail">
-            <div class="tone-label">Ton / Stimmung</div>
-            <p>${s.tone}</p>
-            <div class="ex"><strong>Beispiel:</strong> ${s.example}</div>
-          </div>
-        ` : ''}
-      </div>
-    `).join('')}
-  `;
+function rSlang(){
+  const c=document.getElementById('scr-slang');
+  let h='<div style="margin:18px 0 18px"><h2 class="sec-title">🗣️ Gírias Brasileiras</h2><p class="sec-sub">20 echte Slang-Ausdrücke</p></div>';
+  SLANG.forEach((s,i)=>{
+    const open=S.openSl===i;
+    h+='<div class="slang-i'+(open?' open':'')+'" onclick="togSl('+i+')">';
+    h+='<div style="display:flex;justify-content:space-between;align-items:center"><div><div class="slang-p">„'+s.phrase+'" <button class="spk" onclick="spk(\''+esc(s.phrase)+'\',event)">🔊</button></div><div class="slang-m">→ '+s.meaning+'</div></div>';
+    h+='<span style="color:var(--purple);font-size:11px;transition:.3s;'+(open?'transform:rotate(180deg)':'')+'">▾</span></div>';
+    if(open)h+='<div class="slang-d"><div class="tl">Ton</div><p>'+s.tone+'</p><div class="ex"><b>Beispiel:</b> '+s.example+'</div></div>';
+    h+='</div>';
+  });
+  c.innerHTML=h;
 }
-function toggleSlangItem(i) {
-  state.openSlang = state.openSlang === i ? -1 : i;
-  renderSlangScreen();
-}
+function togSl(i){S.openSl=S.openSl===i?-1:i;rSlang();}
 
-// ═══════════════════════════════════════════
 // INIT
-// ═══════════════════════════════════════════
-render();
-</script>
-</body>
-</html>
+rr();
+</script></body></html>
